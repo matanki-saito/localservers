@@ -37,4 +37,4 @@ spec:
         - containerPort: 80
         env:
         - name: GESO
-          value: 123
+          value: "123"
