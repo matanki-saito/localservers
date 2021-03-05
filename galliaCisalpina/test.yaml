@@ -16,9 +16,6 @@ spec:
     spec:
       containers:
       - name: test 
-        env:
-        - name: HTTP_PORT
-          value: 80
         image: mendhak/http-https-echo:17
         ports:
         - containerPort: 80
