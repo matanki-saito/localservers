@@ -82,7 +82,10 @@ spec:
   gateways:
   - colle-delle-traversette
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /kiali
+    route:
     - destination:
         host: kiali
         port:
