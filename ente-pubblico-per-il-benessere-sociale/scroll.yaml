@@ -36,7 +36,7 @@ spec:
       - name: github-repository-secret
       containers:
       - name: rico-springboot
-        image: ghcr.io/matanki-saito/pdx-txt-java/rico-app:0.0.10-app
+        image: ghcr.io/matanki-saito/rico-app:0.0.10-app
         ports:
         - containerPort: 80
         envFrom:
