@@ -34,9 +34,9 @@ spec:
         image: mendhak/http-https-echo:17
         ports:
         - containerPort: 80
-        env:
-        - name: GESO
-          value: "123"
+        envFrom:
+        - secretRef:
+            name: mysecret
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
