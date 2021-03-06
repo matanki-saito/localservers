@@ -65,7 +65,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /
+        exact: /hoge
     route:
     - destination:
         host: test
