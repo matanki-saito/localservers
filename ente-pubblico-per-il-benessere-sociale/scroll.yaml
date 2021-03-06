@@ -2,44 +2,44 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: test
+  name: rico-sv
   labels:
-    app: test
-    service: test
+    app: rico-app
+    service: rico-sv
 spec:
   ports:
   - port: 80
     targetPort: 80
     name: http
   selector:
-    app: test
+    app: rico-app
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: test
+  name: rico-deployment
   labels:
-    app: test
+    app: rico-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: test
+      app: rico-app
   template:
     metadata:
       namespace: ente-pubblico-per-il-benessere-sociale
       labels:
-        app: test
+        app: rico-app
     spec:
       containers:
-      - name: test 
+      - name: rico-springboot
         image: docker.pkg.github.com/matanki-saito/pdx-txt-java/rico-app:0.0.10-app
         ports:
         - containerPort: 80
         envFrom:
         - secretRef:
-            name: mysecret
+            name: reco-env-secret
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
