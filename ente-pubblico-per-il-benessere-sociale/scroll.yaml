@@ -33,7 +33,7 @@ spec:
         app: rico-app
     spec:
       imagePullSecrets:
-      - name: reco-env-secret
+      - name: github-repository-secret
       containers:
       - name: rico-springboot
         image: docker.pkg.github.com/matanki-saito/pdx-txt-java/rico-app:0.0.10-app
