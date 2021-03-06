@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test
+  labels:
+    app: test
+    service: test
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: http
+  selector:
+    app: test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    app: test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: test 
+        image: mendhak/http-https-echo:17
+        ports:
+        - containerPort: 80
+        env:
+        - name: GESO
+          value: "123"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: colle-delle-traversette
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: test-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - colle-delle-traversette
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: test
+        port:
+          number: 80
