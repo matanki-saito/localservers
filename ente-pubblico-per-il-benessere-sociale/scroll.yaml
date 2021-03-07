@@ -55,7 +55,16 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - local.popush.cloud
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - local.popush.cloud
+    tls:
+      mode: SIMPLE
+      credentialName: httpbin-credential
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
