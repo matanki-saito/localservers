@@ -70,7 +70,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /hoge
+        prefix: /
     route:
     - destination:
         host: test
