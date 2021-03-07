@@ -55,13 +55,13 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - local.popush.cloud
+    - "local.popush.cloud"
   - port:
       number: 443
       name: https
       protocol: HTTPS
     hosts:
-    - local.popush.cloud
+    - "local.popush.cloud"
     tls:
       mode: SIMPLE
       credentialName: httpbin-credential
@@ -73,7 +73,7 @@ metadata:
   name: rico-vs
 spec:
   hosts:
-  - "*"
+  - "local.popush.cloud"
   gateways:
   - colle-delle-traversette
   http:
