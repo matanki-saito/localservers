@@ -61,7 +61,7 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - "local.popush.cloud"
+    - "*"
     tls:
       mode: SIMPLE
       credentialName: httpbin-credential
