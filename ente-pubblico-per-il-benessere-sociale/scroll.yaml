@@ -61,7 +61,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: test-vs
+  name: rico-vs
 spec:
   hosts:
   - "*"
@@ -73,6 +73,6 @@ spec:
         prefix: /
     route:
     - destination:
-        host: test
+        host: rico-sv
         port:
           number: 80
