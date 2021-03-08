@@ -78,3 +78,12 @@ This will install the Istio 1.9.1 default profile with ["Istio core" "Istiod" "I
 ✔ Ingress gateways installed
 ✔ Installation complete
 ```
+
+## Create applications namespace and settings
+
+```sh
+$ microk8s.kubectl create namespace ente-pubblico-per-il-benessere-sociale
+...
+$ microk8s.kubectl label namespace ente-pubblico-per-il-benessere-sociale istio-injection=enabled
+namespace/ente-pubblico-per-il-benessere-sociale labeled
+```

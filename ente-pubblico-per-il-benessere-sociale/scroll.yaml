@@ -32,6 +32,8 @@ spec:
       labels:
         app: rico-app
     spec:
+      imagePullSecrets:
+      - name: github-repository-secret
       containers:
       - name: rico-springboot
         image: ghcr.io/matanki-saito/rico-app:0.0.11-app
