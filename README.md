@@ -2,7 +2,7 @@
 
 ![flows.png](flows.png)
 
-## Set fixed IP to ubuntu
+## Set up machine
 
 For instance
 
@@ -11,6 +11,8 @@ For instance
   - memory 16GB
   - `ufw allow 22`
   - `ufw allow 16443`
+  - `ufw allows 443`
+  - `ufw allows 80`
   - Enable ssh and display sharing
   - [Enable xserver-xorg-video-dummy](http://rarak.jp/16022)
 - Console machine 192.168.1.2
@@ -18,6 +20,18 @@ For instance
   - SSH by Windows terminal
   - [LENS](https://k8slens.dev/)
   - VNC viewer
+
+## Attach one more IP to server machine
+
+```sh
+$ sudo apt install net-tools
+...
+$ ip addr
+2: enp2s0: ...
+$ sudo ifconfig enp2s0:1 192.168.1.100 netmask 255.255.255.0
+```
+
+Refer to [here](http://pentan.info/server/linux/nic_sub_ip.html)
 
 ## Install microk8s
 
@@ -86,4 +100,13 @@ $ microk8s.kubectl create namespace ente-pubblico-per-il-benessere-sociale
 ...
 $ microk8s.kubectl label namespace ente-pubblico-per-il-benessere-sociale istio-injection=enabled
 namespace/ente-pubblico-per-il-benessere-sociale labeled
+```
+
+## Install istio tools
+
+```sh
+$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/samples/addons/kiali.yaml
+...
+$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/samples/addons/prometheus.yaml
+...
 ```
