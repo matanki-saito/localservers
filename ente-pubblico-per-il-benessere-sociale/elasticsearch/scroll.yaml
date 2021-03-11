@@ -78,7 +78,7 @@ spec:
     istio: ingressgateway
   servers:
   - port:
-      number: 9200
+      number: 80
       name: http
       protocol: HTTP
     hosts:
@@ -91,7 +91,7 @@ metadata:
   name: elasticsearch-vs
 spec:
   hosts:
-  - "*"
+  - "local.popush.cloud"
   gateways:
   - colle-del-gran-san-bernardo
   http:
