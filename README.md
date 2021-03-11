@@ -56,7 +56,7 @@ MetalLB is enabled
 
 ```sh
 $ microk8s.kubetl config view --raw > ~/.kube/config
-$
+...
 ```
 
 ## Install helm
@@ -109,4 +109,16 @@ $ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/sam
 ...
 $ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/samples/addons/prometheus.yaml
 ...
+```
+
+## Install cert-manager
+
+```sh
+$ microk8s.kubectl create namespace cert-manager
+...
+$ helm repo add jetstack https://charts.jetstack.io
+...
+$ helm repo update
+...
+$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
 ```
