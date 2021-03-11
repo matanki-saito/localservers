@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/ess"
+    path: "/mnt/data/elasticsearch"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -67,3 +67,39 @@ spec:
       - name: elasticsearch-persistent-storage
         persistentVolumeClaim:
           claimName: elasticsearch-pv-claim
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
+  name: colle-del-gran-san-bernardo
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 9200
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
+  name: elasticsearch-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - colle-del-gran-san-bernardo
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: elasticsearch-sv
+        port:
+          number: 9200
