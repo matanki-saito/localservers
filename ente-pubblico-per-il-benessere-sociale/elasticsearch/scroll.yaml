@@ -82,7 +82,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - "local.popush.cloud"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
