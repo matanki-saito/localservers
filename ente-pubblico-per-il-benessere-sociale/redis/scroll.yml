@@ -1,29 +1,29 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-pv-volume
+  name: redis-pv-volume
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 10Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/mysql"
+    path: "/mnt/data/redis"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: redis-pv-claim
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
@@ -31,39 +31,37 @@ metadata:
   name: mysql
 spec:
   ports:
-  - port: 3306
+  - port: 6379
   selector:
-    app: mysql
+    app: redis
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: redis
 spec:
   selector:
     matchLabels:
-      app: mysql
+      app: redis
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app: redis
     spec:
       containers:
-      - image: mysql:8.0.15
-        name: mysql
-        envFrom:
-        - secretRef:
-            name: mysql-env-secret
+      - image: redis:6.2.1
+        name: redis
+        command: ["redis-server --appendonly yes"]
         ports:
-        - containerPort: 3306
-          name: mysql
+        - containerPort: 6379
+          name: redis
         volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+        - name: redis-persistent-storage
+          mountPath: /data
       volumes:
-      - name: mysql-persistent-storage
+      - name: redis-persistent-storage
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: redis-pv-claim
