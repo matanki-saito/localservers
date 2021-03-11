@@ -54,7 +54,6 @@ spec:
       containers:
       - image: redis:6.2.1
         name: redis
-        command: ["redis-server --appendonly yes"]
         ports:
         - containerPort: 6379
           name: redis
