@@ -26,11 +26,13 @@ spec:
   selector:
     matchLabels:
       app: henrietta-app
+      version: v1
   template:
     metadata:
       namespace: ente-pubblico-per-il-benessere-sociale
       labels:
         app: henrietta-app
+        version: v1
     spec:
       imagePullSecrets:
       - name: github-repository-secret

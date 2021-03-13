@@ -28,7 +28,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
   name: elasticsearch
+  labels:
+    app: elasticsearch
+    service: elasticsearch
 spec:
   ports:
   - port: 9200
@@ -39,17 +43,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
   name: elasticsearch
+  labels:
+    app: elasticsearch
 spec:
   selector:
     matchLabels:
       app: elasticsearch
+      version: v1
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: elasticsearch
+        version: v1
     spec:
       containers:
       - image: elasticsearch:7.6.2
