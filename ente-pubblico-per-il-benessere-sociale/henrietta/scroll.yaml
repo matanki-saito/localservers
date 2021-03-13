@@ -2,52 +2,52 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: rico-sv
+  name: henrietta-sv
   labels:
-    app: rico-app
-    service: rico-sv
+    app: henrietta-app
+    service: henrietta-sv
 spec:
   ports:
   - port: 80
     targetPort: 80
     name: http
   selector:
-    app: rico-app
+    app: henrietta-app
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: rico-deployment
+  name: henrietta-deployment
   labels:
-    app: rico-app
+    app: henrietta-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: rico-app
+      app: henrietta-app
   template:
     metadata:
       namespace: ente-pubblico-per-il-benessere-sociale
       labels:
-        app: rico-app
+        app: henrietta-app
     spec:
       imagePullSecrets:
       - name: github-repository-secret
       containers:
-      - name: rico-springboot
-        image: ghcr.io/matanki-saito/rico-app:0.0.11-app
+      - name: henrietta-springboot
+        image: gnagaoka/henrietta-app:0.1.23
         ports:
         - containerPort: 80
         envFrom:
         - secretRef:
-            name: reco-env-secret
+            name: henrietta-env-secret
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: colle-delle-traversette
+  name: monginevro
 spec:
   selector:
     istio: ingressgateway
@@ -57,41 +57,41 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "rico.popush.cloud"
+    - "henrietta.popush.cloud"
   - port:
       number: 443
       name: https
       protocol: HTTPS
     hosts:
-    - "rico.popush.cloud"
+    - "henrietta.popush.cloud"
     tls:
       mode: SIMPLE
-      credentialName: rico-popush-cloud-tls
+      credentialName: henrietta-popush-cloud-tls
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   namespace: ente-pubblico-per-il-benessere-sociale
-  name: rico-vs
+  name: henrietta-vs
 spec:
   hosts:
-  - "rico.popush.cloud"
+  - "henrietta.popush.cloud"
   gateways:
-  - colle-delle-traversette
+  - monginevro
   http:
   - match:
     - uri:
         prefix: /
     route:
     - destination:
-        host: rico-sv
+        host: henrietta-sv
         port:
           number: 80
 ---
 apiVersion: cert-manager.io/v1alpha3
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-issuer
+  name: henrietta-letsencrypt-issuer
   namespace: istio-system
 spec:
   acme:
@@ -111,14 +111,14 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: rico-popush-cloud-cert
+  name: henrietta-popush-cloud-cert
   namespace: istio-system
 spec:
-  secretName: rico-popush-cloud-tls
-  duration: 2160h # 90d
-  renewBefore: 360h # 15d
+  secretName: henrietta-popush-cloud-tls
+  duration: 2160h
+  renewBefore: 360h
   dnsNames:
-  - 'rico.popush.cloud'
+  - 'henrietta.popush.cloud'
   issuerRef:
-    name: letsencrypt-issuer
+    name: henrietta-letsencrypt-issuer
     kind: ClusterIssuer
