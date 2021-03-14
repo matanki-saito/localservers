@@ -69,6 +69,9 @@ spec:
         envFrom:
         - secretRef:
             name: ck3wiki-env-secret
+        volumeMounts:
+        - name: ck3wiki-persistent-storage
+          mountPath: /var/www/html/images
       volumes:
       - name: ck3wiki-persistent-storage
         persistentVolumeClaim:
