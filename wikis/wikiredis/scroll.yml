@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wikiredis-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/wikiredis"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wikiredis-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wikis
+  name: wikiredis
+  labels:
+    app: wikiredis
+    service: wikiredis
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: wikiredis
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: wikiredis
+  labels:
+    app: wikiredis
+spec:
+  selector:
+    matchLabels:
+      app: wikiredis
+      version: v1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wikiredis
+        version: v1
+    spec:
+      containers:
+      - image: redis:6.2.1
+        name: wikiredis
+        ports:
+        - containerPort: 6379
+          name: wikiredis
+        volumeMounts:
+        - name: wikiredis-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: wikiredis-persistent-storage
+        persistentVolumeClaim:
+          claimName: wikiredis-pv-claim
