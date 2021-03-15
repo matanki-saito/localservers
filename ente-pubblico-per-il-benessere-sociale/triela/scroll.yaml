@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: triela-springboot
-        image: gnagaoka/triela-app:0.3.11
+        image: gnagaoka/triela-app:0.3.12
         ports:
         - containerPort: 80
         envFrom:
