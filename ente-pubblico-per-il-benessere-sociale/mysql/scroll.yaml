@@ -52,7 +52,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql:8.0.15
+      - image: mysql:8.0.20
         name: mysql
         envFrom:
         - secretRef:
