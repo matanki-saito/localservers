@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ck2wiki-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/ck2wiki"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ck2wiki-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wikis
+  name: ck2wiki-sv
+  labels:
+    app: ck2wiki-app
+    service: ck2wiki-sv
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    app: ck2wiki-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: ck2wiki-deployment
+  labels:
+    app: ck2wiki-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ck2wiki-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: ck2wiki-app
+        version: v1
+    spec:
+      containers:
+      - name: ck2wiki-pukiwiki
+        image: gnagaoka/ck2_legacy_wiki:latest
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: ck2wiki-env-secret
+        volumeMounts:
+        - name: ck2wiki-persistent-storage
+          mountPath: /var/www/html/wikidata
+      volumes:
+      - name: ck2wiki-persistent-storage
+        persistentVolumeClaim:
+          claimName: ck2wiki-pv-claim
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: wikis
+  name: ck2-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "ck2wiki.popush.cloud"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: wikis
+  name: ck2wiki-vs
+spec:
+  hosts:
+  - "ck2wiki.popush.cloud"
+  gateways:
+  - ck2-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: ck2wiki-sv
+        port:
+          number: 80
