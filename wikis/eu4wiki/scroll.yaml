@@ -102,6 +102,7 @@ metadata:
 spec:
   hosts:
   - "eu4wiki.popush.cloud"
+  - "eu4.paradwiki.org"
   gateways:
   - eu4-gateway
   http:

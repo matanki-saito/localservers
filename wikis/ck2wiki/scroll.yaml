@@ -102,6 +102,7 @@ metadata:
 spec:
   hosts:
   - "ck2wiki.popush.cloud"
+  - "ck2.paradwiki.org"
   gateways:
   - ck2-gateway
   http:
