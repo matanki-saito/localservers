@@ -91,7 +91,6 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "ck2wiki.popush.cloud"
     - "ck2.paradwiki.org"
 ---
 apiVersion: networking.istio.io/v1alpha3

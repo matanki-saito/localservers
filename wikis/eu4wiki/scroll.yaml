@@ -91,7 +91,6 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "eu4wiki.popush.cloud"
     - "eu4.paradwiki.org"
 ---
 apiVersion: networking.istio.io/v1alpha3
