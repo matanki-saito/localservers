@@ -44,7 +44,6 @@ spec:
         envFrom:
         - secretRef:
             name: henrietta-env-secret
-      restartPolicy: Never
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
