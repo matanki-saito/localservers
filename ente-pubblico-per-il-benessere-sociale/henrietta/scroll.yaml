@@ -44,8 +44,7 @@ spec:
         envFrom:
         - secretRef:
             name: henrietta-env-secret
-        imagePullPolicy: Always
-        restartPolicy: Never
+      restartPolicy: Never
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
