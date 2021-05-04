@@ -63,7 +63,7 @@ spec:
     spec:
       containers:
       - name: ck2wiki-pukiwiki
-        image: gnagaoka/ck2_legacy_wiki:latest
+        image: gnagaoka/ck2_legacy_wiki:release-1.0
         ports:
         - containerPort: 80
         envFrom:
