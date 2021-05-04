@@ -63,7 +63,7 @@ spec:
     spec:
       containers:
       - name: eu4wiki-pukiwiki
-        image: gnagaoka/eu4_legacy_wiki:latest
+        image: gnagaoka/eu4_legacy_wiki:release-1.0
         ports:
         - containerPort: 80
         envFrom:
