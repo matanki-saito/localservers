@@ -93,6 +93,19 @@ This will install the Istio 1.9.1 default profile with ["Istio core" "Istiod" "I
 ✔ Installation complete
 ```
 
+## Configuring network topologies to use X-Forwraded-For
+
+Ref: https://istio.io/latest/docs/ops/configuration/traffic-management/network-topologies/
+
+1. Create topology.yaml
+2. Install topology.yaml using istioctl
+3. Restert istio Deployments
+
+## Change externalTrafficPolicy type from Cruster to Local
+
+1. Open `istio-ingressgateway` service yaml by LENS.
+2. Change externalTrafficPolicy type from `Cruster` to `Local`.
+
 ## Create applications namespace and settings
 
 ```sh
