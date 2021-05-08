@@ -213,3 +213,102 @@ spec:
                     headers:
                       - name: ':method'
                         prefix_match: POST
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: eu4-filter-ratelimit-svc
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: VIRTUAL_HOST
+      match:
+        context: GATEWAY
+        routeConfiguration:
+          vhost:
+            name: "eu4.paradwiki.org:80"
+            route:
+              action: ANY
+      patch:
+        operation: MERGE
+        value:
+          rate_limits:
+            - actions:
+                - request_headers:
+                    descriptor_key: PATH
+                    header_name: ':path'
+            - actions:
+                - header_value_match:
+                    descriptor_value: post
+                    headers:
+                      - name: ':method'
+                        prefix_match: POST
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: ck2-wiki-filter-ratelimit-svc
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: VIRTUAL_HOST
+      match:
+        context: GATEWAY
+        routeConfiguration:
+          vhost:
+            name: "ck2.paradwiki.org:80"
+            route:
+              action: ANY
+      patch:
+        operation: MERGE
+        value:
+          rate_limits:
+            - actions:
+                - request_headers:
+                    descriptor_key: PATH
+                    header_name: ':path'
+            - actions:
+                - header_value_match:
+                    descriptor_value: post
+                    headers:
+                      - name: ':method'
+                        prefix_match: POST
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: ck3-wiki-filter-ratelimit-svc
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: VIRTUAL_HOST
+      match:
+        context: GATEWAY
+        routeConfiguration:
+          vhost:
+            name: "ck3wiki.poppush.cloud:443"
+            route:
+              action: ANY
+      patch:
+        operation: MERGE
+        value:
+          rate_limits:
+            - actions:
+                - request_headers:
+                    descriptor_key: PATH
+                    header_name: ':path'
+            - actions:
+                - header_value_match:
+                    descriptor_value: post
+                    headers:
+                      - name: ':method'
+                        prefix_match: POST
