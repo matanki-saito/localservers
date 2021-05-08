@@ -1,0 +1,215 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: istio-system
+  name: ratelimit-config
+data:
+  config.yaml: |
+    domain: productpage-ratelimit
+    descriptors:
+      - key: header_match
+        value: post
+        rate_limit:
+          requests_per_unit: 10
+          unit: minute
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: istio-system
+  name: rate-limiter-redis
+  labels:
+    app: rate-limiter-redis
+spec:
+  ports:
+  - name: rate-limiter-redis
+    port: 6379
+  selector:
+    app: rate-limiter-redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: istio-system
+  name: rate-limiter-redis-dp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rate-limiter-redis
+  template:
+    metadata:
+      namespace: istio-system
+      labels:
+        app: rate-limiter-redis
+    spec:
+      containers:
+      - image: redis:alpine
+        imagePullPolicy: Always
+        name: rate-limiter-redis-container
+        ports:
+        - name: redis
+          containerPort: 6379
+      restartPolicy: Always
+      serviceAccountName: ""
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: istio-system
+  name: ratelimit
+  labels:
+    app: ratelimit
+spec:
+  ports:
+  - name: http-port
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: grpc-port
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  - name: http-debug
+    port: 6070
+    targetPort: 6070
+    protocol: TCP
+  selector:
+    app: ratelimit
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: istio-system
+  name: ratelimit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratelimit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      namespace: istio-system
+      labels:
+        app: ratelimit
+    spec:
+      containers:
+      - image: envoyproxy/ratelimit:6f5de117
+        imagePullPolicy: Always
+        name: ratelimit
+        command: ["/bin/ratelimit"]
+        env:
+        - name: LOG_LEVEL
+          value: debug
+        - name: REDIS_SOCKET_TYPE
+          value: tcp
+        - name: REDIS_URL
+          value: rate-limiter-redis:6379
+        - name: USE_STATSD
+          value: "false"
+        - name: RUNTIME_ROOT
+          value: /data
+        - name: RUNTIME_SUBDIRECTORY
+          value: ratelimit
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+        - containerPort: 6070
+        volumeMounts:
+        - name: config-volume
+          mountPath: /data/ratelimit/config/config.yaml
+          subPath: config.yaml
+      volumes:
+      - name: config-volume
+        configMap:
+          name: ratelimit-config
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: filter-ratelimit
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.router"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.ratelimit
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
+            domain: productpage-ratelimit
+            failure_mode_deny: true
+            rate_limit_service:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: rate_limit_cluster
+                timeout: 10s
+              transport_api_version: V3
+    - applyTo: CLUSTER
+      match:
+        cluster:
+          service: ratelimit.istio-system.svc.cluster.local
+      patch:
+        operation: ADD
+        value:
+          name: rate_limit_cluster
+          type: STRICT_DNS
+          connect_timeout: 10s
+          lb_policy: ROUND_ROBIN
+          http2_protocol_options: {}
+          load_assignment:
+            cluster_name: rate_limit_cluster
+            endpoints:
+            - lb_endpoints:
+              - endpoint:
+                  address:
+                     socket_address:
+                      address: ratelimit.istio-system.svc.cluster.local
+                      port_value: 8081
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: filter-ratelimit-svc
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: VIRTUAL_HOST
+      match:
+        context: GATEWAY
+        routeConfiguration:
+          vhost:
+            name: "eu4.paradwiki.org:80"
+            route:
+              action: ANY
+      patch:
+        operation: MERGE
+        value:
+          rate_limits:
+            - actions:
+                - request_headers:
+                    descriptor_key: PATH
+                    header_name: ':path'
+            - actions:
+                - header_value_match:
+                    descriptor_value: post
+                    headers:
+                      - name: ':method'
+                        prefix_match: POST
