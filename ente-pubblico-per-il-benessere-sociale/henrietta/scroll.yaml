@@ -38,7 +38,7 @@ spec:
       - name: github-repository-secret
       containers:
       - name: henrietta-springboot
-        image: gnagaoka/henrietta-app:0.1.26
+        image: gnagaoka/henrietta-app:0.1.27
         ports:
         - containerPort: 80
         envFrom:
