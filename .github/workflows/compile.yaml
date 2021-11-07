@@ -14,15 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: move workdir
+      - name: build
         run: |
           cd monitoring
+          jb init
           ls
-
-      - name: initialize jb
-        run: jb init
-
-      - name: compile jsonnet
-        run: |
-          ls
-          bash build.sh scroll.jsonnet
+          ./build.sh scroll.jsonnet
+          
