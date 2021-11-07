@@ -1,0 +1,24 @@
+name: Compile jsonnet
+
+on:
+  workflow_dispatch:
+    inputs:
+      info:
+        description: 'manual trigger'
+
+jobs:
+  node-docker:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/coreos/jsonnet-ci
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: workdir
+        run: cd monitoring
+
+      - name: initialize jb
+        run: jb init
+
+      - name: compile jsonnet
+        run: ./build.sh scroll.jsonnet
