@@ -30,6 +30,28 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
         },
       },
     },
+    serviceMonitorTriela: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
+      metadata: {
+        name: 'triela-servicemonitor',
+        namespace: 'ente-pubblico-per-il-benessere-sociale',
+      },
+      spec: {
+        jobLabel: 'app',
+        endpoints: [
+          {
+            targetPort: 80,
+            path: '/actuator/prometheus',
+          },
+        ],
+        selector: {
+          matchLabels: {
+            'app': 'triela-app',
+          },
+        },
+      },
+    },
   },
 
 };
