@@ -14,8 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: workdir
-        run: cd monitoring
+      - name: move workdir
+        run: |
+          cd monitoring
+          ls
 
       - name: initialize jb
         run: jb init
