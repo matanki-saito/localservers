@@ -18,7 +18,7 @@ jobs:
         run: |
           cd monitoring
           rm -rf manifests/*
-          jb init
+          jb update
           jb install github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus@release-0.8
           ls
           ./build.sh scroll.jsonnet
