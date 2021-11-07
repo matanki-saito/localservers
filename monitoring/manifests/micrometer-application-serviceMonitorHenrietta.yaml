@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: henrietta-servicemonitor
+  namespace: ente-pubblico-per-il-benessere-sociale
+spec:
+  endpoints:
+  - path: /actuator/prometheus
+    targetPort: 80
+  jobLabel: app
+  selector:
+    matchLabels:
+      app: henrietta-app
