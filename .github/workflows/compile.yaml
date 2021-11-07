@@ -23,4 +23,6 @@ jobs:
         run: jb init
 
       - name: compile jsonnet
-        run: ./build.sh scroll.jsonnet
+        run: |
+          ls
+          bash build.sh scroll.jsonnet
