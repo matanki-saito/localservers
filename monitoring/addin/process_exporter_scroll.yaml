@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  name: process-exporter-sv
+  labels:
+    app: process-exporter-app
+    service: process-exporter-sv
+spec:
+  ports:
+  - port: 9256
+    targetPort: 9256
+    name: http
+  selector:
+    app: process-exporter-app
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: monitoring
+  name: process-exporter-ds
+  labels:
+    app: process-exporter-app
+spec:
+  selector:
+    matchLabels:
+      app: process-exporter-app
+      version: v1
+  template:
+    metadata:
+      namespace: monitoring
+      labels:
+        app: process-exporter-app
+        version: v1
+    spec:
+      containers:
+      - name: process-exporter-on-docker
+        image: ncabatoff/process-exporter:latest
+        args:
+          - --procfs=/host/proc
+          - --config.path=/config/default.yml
+        ports:
+        - containerPort: 9256
+          protocol: TCP
+        volumeMounts:
+          - name: proc
+            mountPath: /host/proc
+            readOnly:  true
+          - name: config
+            mountPath: /config
+      hostPID: true
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: config
+        configMap:
+          name: process-exporter-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: process-exporter-configmap
+  labels:
+    app: process-exporter-app
+data:
+  default.yml: |
+    process_names:
+      - comm:
+        - chromium-browse
+        - bash
+        - prometheus
+        - gvim
+      - exe:
+        - /sbin/upstart
+        cmdline:
+        - --user
+        name: upstart:-user
