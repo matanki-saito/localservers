@@ -1,0 +1,79 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: argocd
+  name: argocd-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "argocd.popush.cloud"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "argocd.popush.cloud"
+    tls:
+      mode: SIMPLE
+      credentialName: argocd-popush-cloud-tls
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: monitoring
+  name: argocd-vs
+spec:
+  hosts:
+  - "argocd.popush.cloud"
+  gateways:
+  - argocd-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: helm-argocd-release-server
+        port:
+          number: 3000
+---
+apiVersion: cert-manager.io/v1alpha3
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: matanki.saito@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-issuer-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: ap-northeast-1
+          accessKeyID: AKIAXMVOGSBVQQMRQ3TJ
+          secretAccessKeySecretRef:
+            name: route53-credentials-secret
+            key: secret-access-key
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-popush-cloud-cert
+  namespace: istio-system
+spec:
+  secretName: argocd-popush-cloud-tls
+  duration: 2160h0m0s
+  renewBefore: 360h0m0s
+  dnsNames:
+  - 'argocd.popush.cloud'
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: ClusterIssuer
