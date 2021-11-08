@@ -46,7 +46,7 @@ spec:
 apiVersion: cert-manager.io/v1alpha3
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-issuer
+  name: argocd-letsencrypt-issuer
   namespace: istio-system
 spec:
   acme:
