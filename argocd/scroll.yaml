@@ -75,5 +75,5 @@ spec:
   dnsNames:
   - 'argocd.popush.cloud'
   issuerRef:
-    name: letsencrypt-issuer
+    name: argocd-letsencrypt-issuer
     kind: ClusterIssuer

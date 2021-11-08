@@ -75,5 +75,5 @@ spec:
   dnsNames:
   - 'grafana.popush.cloud'
   issuerRef:
-    name: letsencrypt-issuer
+    name: grafana-letsencrypt-issuer
     kind: ClusterIssuer
