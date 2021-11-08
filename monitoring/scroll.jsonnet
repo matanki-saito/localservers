@@ -7,6 +7,30 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
       namespaces+: ['ente-pubblico-per-il-benessere-sociale'],
     },
   },
+  processExporter: {
+    myhome: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
+      metadata: {
+        name: 'process-exporter-servicemonitor',
+        namespace: 'monitoring',
+      },
+      spec: {
+        jobLabel: 'app',
+        endpoints: [
+          {
+            targetPort: 9256,
+            path: '/metrics',
+          },
+        ],
+        selector: {
+          matchLabels: {
+            'app': 'process-exporter-app',
+          },
+        },
+      },
+    },
+  },
   micrometerApplication: {
     serviceMonitorHenrietta: {
       apiVersion: 'monitoring.coreos.com/v1',
@@ -63,4 +87,5 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
 { ['alertmanager-' + name]: kp.alertmanager[name] for name in std.objectFields(kp.alertmanager) } +
 { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(kp.prometheus) } +
 { ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
-{ ['micrometer-application-' + name]: kp.micrometerApplication[name] for name in std.objectFields(kp.micrometerApplication) }
+{ ['micrometer-application-' + name]: kp.micrometerApplication[name] for name in std.objectFields(kp.micrometerApplication) } +
+{ ['process-exporter-' + name]: kp.processExporter[name] for name in std.objectFields(kp.processExporter) }
