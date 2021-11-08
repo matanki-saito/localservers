@@ -1,0 +1,79 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: monitoring
+  name: hakone
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 3000
+      name: http
+      protocol: HTTP
+    hosts:
+    - "grafana.popush.cloud"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "grafana.popush.cloud"
+    tls:
+      mode: SIMPLE
+      credentialName: grafana-popush-cloud-tls
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: monitoring
+  name: grafana-vs
+spec:
+  hosts:
+  - "grafana.popush.cloud"
+  gateways:
+  - hakone
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: grafana
+        port:
+          number: 3000
+---
+apiVersion: cert-manager.io/v1alpha3
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-issuer
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: matanki.saito@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-issuer-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: ap-northeast-1
+          accessKeyID: AKIAXMVOGSBVQQMRQ3TJ
+          secretAccessKeySecretRef:
+            name: route53-credentials-secret
+            key: secret-access-key
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-popush-cloud-cert
+  namespace: istio-system
+spec:
+  secretName: grafana-popush-cloud-tls
+  duration: 2160h0m0s
+  renewBefore: 360h0m0s
+  dnsNames:
+  - 'grafana.popush.cloud'
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: ClusterIssuer
