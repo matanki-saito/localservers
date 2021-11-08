@@ -21,6 +21,31 @@ For instance
   - [LENS](https://k8slens.dev/)
   - VNC viewer
 
+## Extend swap size and set swap parameters
+
+Refer to [link1](https://qiita.com/gitcho/items/d38b77ce746b5de872f0), [link2](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04-ja)
+
+```sh
+$ sudo fallocate -l 4G /swapfile2
+$ sudo chmod 600 /swapfile2
+$ sudo mkswap /swapfile2
+$ sudo swapon /swapfile2
+$ swapon -s
+$ grep swapfile /etc/fstab 
+/swapfile                                none            swap    sw              0       0
+/swapfile2                               none            swap    sw              0       0
+$ reboot
+...
+$ swapon --show
+$ cat /proc/sys/vm/swappiness
+60
+$ sudo sysctl vm.swappiness=10
+$ cat /proc/sys/vm/vfs_cache_pressure
+100
+sudo sysctl vm.vfs_cache_pressure=50
+```
+
+
 ## Attach one more IP to server machine
 
 ```sh
@@ -135,3 +160,7 @@ $ helm repo update
 ...
 $ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
 ```
+
+## Apply manifests by argocd
+
+TBD
