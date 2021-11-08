@@ -41,7 +41,7 @@ spec:
     - destination:
         host: helm-argocd-release-server
         port:
-          number: 3000
+          number: 80
 ---
 apiVersion: cert-manager.io/v1alpha3
 kind: ClusterIssuer
