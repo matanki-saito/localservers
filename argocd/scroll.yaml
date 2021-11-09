@@ -26,7 +26,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  namespace: monitoring
+  namespace: argocd
   name: argocd-vs
 spec:
   hosts:
