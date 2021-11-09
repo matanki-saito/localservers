@@ -45,7 +45,6 @@ $ cat /proc/sys/vm/vfs_cache_pressure
 sudo sysctl vm.vfs_cache_pressure=50
 ```
 
-
 ## Attach one more IP to server machine
 
 ```sh
@@ -98,7 +97,7 @@ $ helm repo add argo https://argoproj.github.io/argo-helm
 ...
 $ microk8s.kubectl create namespace argocd
 namespace/argocd created
-$ helm install helm-argocd-release argo/argo-cd -n argocd
+$ helm install helm-argocd-release argo/argo-cd -n argocd --set server.extraArgs={--insecure}
 ...
 ```
 
@@ -161,6 +160,12 @@ $ helm repo update
 $ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
 ```
 
-## Apply manifests by argocd
+## Apply manifests to cluster using argocd
 
-TBD
+0. Set repositories(localservers(this repository) and localservers-private(private repositories))
+1. Create app(argocd) from /argocd
+2. Create apps(henrietta,rico,triela,redis,mysql,es) from /ente-pubblico-per-il-benessere-sociale
+3. Create apps(refer to kube-prometheus) from /monitoring
+4. Create apps(grafana gateway,process-exporter) from /monitoring/addin
+5. Create app(rate-limiter) from rate-limiter
+6. Create apps from wikis (ck2wiki,ck3wiki,eu4wiki,wikidb,wikiredis)
