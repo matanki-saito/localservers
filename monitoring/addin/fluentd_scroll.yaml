@@ -55,6 +55,13 @@ spec:
           #  value: "ThisIsASuperLongToken"
           # - name: LOGZIO_LOGTYPE
           #  value: "kubernetes"
+          # https://github.com/fluent/fluentd-kubernetes-daemonset/issues/434
+          - name: FLUENTD_SYSTEMD_CONF
+            value: disable
+          - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
+            value: /var/log/containers/fluent*
+          - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
+            value: /^(?<time>.+) (?<stream>stdout|stderr)( (?<logtag>.))? (?<log>.*)$/
         resources:
           limits:
             memory: 200Mi
