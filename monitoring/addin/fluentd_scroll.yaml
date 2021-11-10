@@ -108,7 +108,7 @@ data:
   containers.conf: |
     <source>
       @type tail
-      @id in_tail_container_logs
+      @id henrietta_in_tail_container_logs
       path /var/log/containers/henrietta-*.log
       pos_file /var/log/fluentd-containers.log.pos
       tag kubernetes.*
@@ -124,7 +124,7 @@ data:
     </source>
     <source>
       @type tail
-      @id in_tail_container_logs
+      @id triela_in_tail_container_logs
       path /var/log/containers/triela-*.log
       pos_file /var/log/fluentd-containers.log.pos
       tag kubernetes.*
