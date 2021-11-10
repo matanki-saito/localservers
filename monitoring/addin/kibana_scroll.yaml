@@ -1,0 +1,124 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: monitoring
+  name: ichikawa
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 5601
+      name: http
+      protocol: HTTP
+    hosts:
+    - "kibana.popush.cloud"
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "kibana.popush.cloud"
+    tls:
+      mode: SIMPLE
+      credentialName: kibana-popush-cloud-tls
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: monitoring
+  name: kibana-vs
+spec:
+  hosts:
+  - "kibana.popush.cloud"
+  gateways:
+  - hakone
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: kibana-sv
+        port:
+          number: 5601
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  name: kibana-sv
+  labels:
+    app: kibana-app
+    service: kibana-sv
+spec:
+  ports:
+  - port: 5601
+    targetPort: 5601
+    name: http
+  selector:
+    app: kibana-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: monitoring
+  name: kibana-deployment
+  labels:
+    app: kibana-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana-app
+      version: v1
+  template:
+    metadata:
+      namespace: monitoring
+      labels:
+        app: kibana-app
+        version: v1
+    spec:
+      containers:
+      - name: kibana-docker
+        image: kibana:7.6.2
+        ports:
+        - containerPort: 5601
+        envFrom:
+        - secretRef:
+            name: kibana-env-secret
+---
+apiVersion: cert-manager.io/v1alpha3
+kind: ClusterIssuer
+metadata:
+  name: kibana-letsencrypt-issuer
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: matanki.saito@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-issuer-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: ap-northeast-1
+          accessKeyID: AKIAXMVOGSBVQQMRQ3TJ
+          secretAccessKeySecretRef:
+            name: route53-credentials-secret
+            key: secret-access-key
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kibana-popush-cloud-cert
+  namespace: istio-system
+spec:
+  secretName: kibana-popush-cloud-tls
+  duration: 2160h0m0s
+  renewBefore: 360h0m0s
+  dnsNames:
+  - 'kibana.popush.cloud'
+  issuerRef:
+    name: kibana-letsencrypt-issuer
+    kind: ClusterIssuer
