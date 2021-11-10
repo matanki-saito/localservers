@@ -110,9 +110,8 @@ data:
       @type tail
       @id henrietta_in_tail_container_logs
       path /var/log/containers/henrietta-*.log
-      pos_file /var/log/fluentd-containers.log.pos
+      pos_file /var/log/henrietta-fluentd-containers.log.pos
       tag kubernetes.*
-      exclude_path "#{ENV['FLUENT_CONTAINER_TAIL_EXCLUDE_PATH'] || use_default}"
       read_from_head true
       <parse>
         @type cri
@@ -126,9 +125,8 @@ data:
       @type tail
       @id triela_in_tail_container_logs
       path /var/log/containers/triela-*.log
-      pos_file /var/log/fluentd-containers.log.pos
+      pos_file /var/log/triela-fluentd-containers.log.pos
       tag kubernetes.*
-      exclude_path "#{ENV['FLUENT_CONTAINER_TAIL_EXCLUDE_PATH'] || use_default}"
       read_from_head true
       <parse>
         @type cri
