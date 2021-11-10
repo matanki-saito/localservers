@@ -60,12 +60,6 @@ spec:
             value: disable
           - name: FLUENTD_PROMETHEUS_CONF
             value: disable
-          - name: FLUENT_CONTAINER_TAIL_PATH
-            value: /var/log/containers/henrietta-*.log
-          - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
-            value: cri
-          - name: FLUENT_CONTAINER_TAIL_PARSER_TIME_FORMAT
-            value: "%iso8601"
         resources:
           limits:
             memory: 200Mi
@@ -73,6 +67,9 @@ spec:
             cpu: 100m
             memory: 200Mi
         volumeMounts:
+        - name: config-volume
+          mountPath: /fluentd/etc/kubernetes/containers.conf
+          subPath: containers.conf
         - name: varlog
           mountPath: /var/log
         # When actual pod logs in /var/lib/docker/containers, the following lines should be used.
@@ -96,3 +93,32 @@ spec:
       - name: dockercontainerlogdirectory
         hostPath:
           path: /var/log/pods
+      - name: config-volume
+        configMap:
+          name: fluentd-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-conf
+  namespace: monitoring
+  labels:
+    app: fluentd-app
+data:
+  containers.conf: |
+    <source>
+      @type tail
+      @id in_tail_container_logs
+      path /var/log/containers/henrietta-*.log
+      pos_file /var/log/fluentd-containers.log.pos
+      tag kubernetes.*
+      exclude_path "#{ENV['FLUENT_CONTAINER_TAIL_EXCLUDE_PATH'] || use_default}"
+      read_from_head true
+      <parse>
+        @type cri
+        time_format %iso8601
+        <parse>
+          @type ltsv
+        </parse>
+      </parse>
+    </source>
