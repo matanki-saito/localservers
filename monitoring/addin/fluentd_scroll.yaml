@@ -63,7 +63,7 @@ spec:
           - name: FLUENT_CONTAINER_TAIL_PATH
             value: /var/log/containers/henrietta-*.log
           - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
-            value: ltsv
+            value: cri
         resources:
           limits:
             memory: 200Mi
