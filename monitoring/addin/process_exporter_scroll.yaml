@@ -71,8 +71,11 @@ data:
         - bash
         - prometheus
         - gvim
+        - mysqld
+        - java
+        - apache2
       - exe:
-        - /sbin/upstart
+        - /snap/microk8s
         cmdline:
         - --user
         name: upstart:-user
