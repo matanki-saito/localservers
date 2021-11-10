@@ -58,7 +58,7 @@ spec:
           # https://github.com/fluent/fluentd-kubernetes-daemonset/issues/434
           - name: FLUENTD_SYSTEMD_CONF
             value: disable
-          - na,e: FLUENTD_PROMETHEUS_CONF
+          - name: FLUENTD_PROMETHEUS_CONF
             value: disable
           - name: FLUENT_CONTAINER_TAIL_PATH
             value: /var/log/containers/henrietta-*.log
