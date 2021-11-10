@@ -32,7 +32,7 @@ spec:
   hosts:
   - "kibana.popush.cloud"
   gateways:
-  - hakone
+  - ichikawa
   http:
   - match:
     - uri:
