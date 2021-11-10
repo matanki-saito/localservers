@@ -109,7 +109,7 @@ data:
     <source>
       @type tail
       @id in_tail_container_logs
-      path /var/log/containers/henrietta-*.log
+      path /var/log/containers/henrietta-*.log,/var/log/containers/triela-*.log
       pos_file /var/log/fluentd-containers.log.pos
       tag kubernetes.*
       exclude_path "#{ENV['FLUENT_CONTAINER_TAIL_EXCLUDE_PATH'] || use_default}"
