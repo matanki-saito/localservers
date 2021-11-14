@@ -48,7 +48,7 @@ jobs:
         continue-on-error: true
   update-target-yaml:
     runs-on: ubuntu-latest
-    if: "contains(github.event.commits[0].message, '[update yaml]')"
+    if: ${{ github.event.inputs.source != null }}
     needs: update-monitoring
     steps:
       - uses: actions/checkout@v2
