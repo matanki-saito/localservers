@@ -60,4 +60,7 @@ jobs:
           propertyPath: ${{ github.event.inputs.target }}
           value:  ${{ github.event.inputs.value }}
           commitChange: true
+          branch: main
+          targetBranch: main
+          masterBranchName: main
           message: 'updated!'
