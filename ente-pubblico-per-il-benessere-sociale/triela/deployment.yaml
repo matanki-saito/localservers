@@ -19,10 +19,10 @@ spec:
         version: v1
     spec:
       containers:
-      - name: triela-springboot
-        image: gnagaoka/triela-app:0.3.14
-        ports:
-        - containerPort: 80
-        envFrom:
-        - secretRef:
-            name: triela-env-secret
+        - name: triela-springboot
+          image: gnagaoka/triela-app:0.3.15
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+                name: triela-env-secret
