@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
     inputs:
+      source:
+        description: 'Source file'
+        required: true
       target:
         description: 'Target'
         required: true
@@ -51,7 +54,7 @@ jobs:
       - name: Update target.yaml
         uses: fjogeleit/yaml-update-action@master
         with:
-          valueFile: 'target.yaml'
+          valueFile: ${{ github.event.inputs.source }}
           propertyPath: ${{ github.event.inputs.target }}
           value:  ${{ github.event.inputs.value }}
           commitChange: true
