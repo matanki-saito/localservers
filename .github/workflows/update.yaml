@@ -46,13 +46,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         continue-on-error: true
-  update-version:
+  update-target-yaml:
     runs-on: ubuntu-latest
+    if: "contains(github.event.commits[0].message, '[update yaml]')"
     needs: update-monitoring
     steps:
       - uses: actions/checkout@v2
 
-      - name: Update target.yaml
+      - name: Update target yaml
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: ${{ github.event.inputs.source }}
