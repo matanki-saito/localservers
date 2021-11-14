@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
+  name: triela-deployment
+  labels:
+    app: triela-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triela-app
+      version: v1
+  template:
+    metadata:
+      namespace: ente-pubblico-per-il-benessere-sociale
+      labels:
+        app: triela-app
+        version: v1
+    spec:
+      containers:
+      - name: triela-springboot
+        image: gnagaoka/triela-app:0.3.14
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: triela-env-secret
