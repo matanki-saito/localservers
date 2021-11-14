@@ -1,4 +1,4 @@
-name: Compile jsonnet
+name: Update yaml
 
 on:
   push:
@@ -6,11 +6,15 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      info:
-        description: 'manual trigger'
+      target:
+        description: 'Target'
+        required: true
+      value:
+        description: 'Value'
+        required: true
 
 jobs:
-  node-docker:
+  update-monitoring:
     runs-on: ubuntu-latest
     container:
       image: quay.io/coreos/jsonnet-ci
@@ -39,3 +43,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         continue-on-error: true
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update target.yaml
+        uses: fjogeleit/yaml-update-action@master
+        with:
+          valueFile: 'target.yaml'
+          propertyPath: ${{ github.event.inputs.target }}
+          value:  ${{ github.event.inputs.value }}
+          commitChange: true
+          message: 'updated!'
