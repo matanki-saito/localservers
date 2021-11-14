@@ -14,37 +14,6 @@ spec:
   selector:
     app: henrietta-app
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: ente-pubblico-per-il-benessere-sociale
-  name: henrietta-deployment
-  labels:
-    app: henrietta-app
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: henrietta-app
-      version: v1
-  template:
-    metadata:
-      namespace: ente-pubblico-per-il-benessere-sociale
-      labels:
-        app: henrietta-app
-        version: v1
-    spec:
-      imagePullSecrets:
-      - name: github-repository-secret
-      containers:
-      - name: henrietta-springboot
-        image: gnagaoka/henrietta-app:0.1.31
-        ports:
-        - containerPort: 80
-        envFrom:
-        - secretRef:
-            name: henrietta-env-secret
----
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
