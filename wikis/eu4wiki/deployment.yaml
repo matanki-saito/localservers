@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: eu4wiki-deployment
+  labels:
+    app: eu4wiki-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eu4wiki-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: eu4wiki-app
+        version: v1
+    spec:
+      containers:
+      - name: eu4wiki-pukiwiki
+        image: gnagaoka/eu4_legacy_wiki:v1.0.2
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: eu4wiki-env-secret
+        volumeMounts:
+        - name: eu4wiki-persistent-storage
+          mountPath: /var/www/html/wikidata
+      volumes:
+      - name: eu4wiki-persistent-storage
+        persistentVolumeClaim:
+          claimName: eu4wiki-pv-claim
