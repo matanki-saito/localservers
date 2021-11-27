@@ -40,7 +40,6 @@ metadata:
 spec:
   schedule: "* */12 * * *"
   concurrencyPolicy: "Forbid"
-  restartPolicy: "OnFailure"
   startingDeadlineSeconds: 600
   jobTemplate:
     spec:
@@ -61,7 +60,7 @@ spec:
                 readOnly: true
             args:
               - no-cron
-
+          restartPolicy: "OnFailure"
           volumes:
             - name: eu4wiki-persistent-storage
               persistentVolumeClaim:
