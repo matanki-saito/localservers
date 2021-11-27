@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: ck2wiki-deployment
+  labels:
+    app: ck2wiki-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ck2wiki-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: ck2wiki-app
+        version: v1
+    spec:
+      containers:
+      - name: ck2wiki-pukiwiki
+        image: gnagaoka/ck2_legacy_wiki:release-1.1
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: ck2wiki-env-secret
+        volumeMounts:
+        - name: ck2wiki-persistent-storage
+          mountPath: /var/www/html/wikidata
+      volumes:
+      - name: ck2wiki-persistent-storage
+        persistentVolumeClaim:
+          claimName: ck2wiki-pv-claim
