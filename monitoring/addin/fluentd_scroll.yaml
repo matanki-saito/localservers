@@ -144,7 +144,13 @@ data:
       path /var/log/containers/eu4wiki-*.log
       pos_file /var/log/eu4wiki-fluentd-containers.log.pos
       tag eu4wiki
-      format apache2
+      <parse>
+        @type cri
+        time_format %iso8601
+        <parse>
+          @type apache2
+        </parse>
+      </parse>
     </source>
     <source>
       @type tail
@@ -152,7 +158,13 @@ data:
       path /var/log/containers/ck2wiki-*.log
       pos_file /var/log/ck2wiki-fluentd-containers.log.pos
       tag ck2wiki
-      format apache2
+      <parse>
+        @type cri
+        time_format %iso8601
+        <parse>
+          @type apache2
+        </parse>
+      </parse>
     </source>
     <source>
       @type tail
@@ -160,5 +172,11 @@ data:
       path /var/log/containers/ck3wiki-*.log
       pos_file /var/log/ck3wiki-fluentd-containers.log.pos
       tag ck3wiki
-      format apache2
+      <parse>
+        @type cri
+        time_format %iso8601
+        <parse>
+          @type apache2
+        </parse>
+      </parse>
     </source>
