@@ -62,6 +62,8 @@ spec:
             value: disable
           - name: FLUENT_ELASTICSEARCH_LOGSTASH_INDEX_NAME
             value: ${tag}
+          - name: FLUENT_ELASTICSEARCH_LOGSTASH_FORMAT
+            value: "false"
         resources:
           limits:
             memory: 200Mi
