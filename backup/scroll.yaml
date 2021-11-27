@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: backup
+  name: ck2wiki-backup-batch
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: ck2wiki-backup-docker
+            image: istepanov/backup-to-s3
+            restartPolicy: OnFailure
+              envFrom:
+                - secretRef:
+                    name: ck2wiki-backup-env-secret
+            volumeMounts:
+              - name: ck2wiki-persistent-storage
+                mountPath: /data
+                readOnly: true
+            args:
+              - no-cron
+          volumes:
+            - name: ck2wiki-persistent-storage
+              persistentVolumeClaim:
+                claimName: ck2wiki-pv-claim
