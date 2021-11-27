@@ -13,9 +13,9 @@ spec:
           - name: ck2wiki-backup-docker
             image: istepanov/backup-to-s3
             restartPolicy: OnFailure
-              envFrom:
-                - secretRef:
-                    name: ck2wiki-backup-env-secret
+            envFrom:
+              - secretRef:
+                name: ck2wiki-backup-env-secret
             volumeMounts:
               - name: ck2wiki-persistent-storage
                 mountPath: /data
