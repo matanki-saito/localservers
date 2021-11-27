@@ -4,7 +4,7 @@ metadata:
   namespace: wikis
   name: ck2wiki-backup-batch
 spec:
-  schedule: "*/30 * * * *"
+  schedule: "* */12 * * *"
   jobTemplate:
     spec:
       template:
@@ -26,3 +26,32 @@ spec:
             - name: ck2wiki-persistent-storage
               persistentVolumeClaim:
                 claimName: ck2wiki-pv-claim
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: wikis
+  name: eu4wiki-backup-batch
+spec:
+  schedule: "* */12 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: eu4wiki-backup-docker
+            image: istepanov/backup-to-s3
+            envFrom:
+              - secretRef:
+                  name: eu4wiki-backup-env-secret
+            volumeMounts:
+              - name: eu4wiki-persistent-storage
+                mountPath: /data
+                readOnly: true
+            args:
+              - no-cron
+          restartPolicy: OnFailure
+          volumes:
+            - name: eu4wiki-persistent-storage
+              persistentVolumeClaim:
+                claimName: eu4wiki-pv-claim
