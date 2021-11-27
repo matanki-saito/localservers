@@ -26,3 +26,16 @@ spec:
             - name: ck2wiki-persistent-storage
               persistentVolumeClaim:
                 claimName: ck2wiki-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: backup
+  name: ck2wiki-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
