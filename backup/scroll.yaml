@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  namespace: backup
+  namespace: wikis
   name: ck2wiki-backup-batch
 spec:
   schedule: "*/30 * * * *"
@@ -26,16 +26,3 @@ spec:
             - name: ck2wiki-persistent-storage
               persistentVolumeClaim:
                 claimName: ck2wiki-pv-claim
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: backup
-  name: ck2wiki-pv-claim
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4Gi
