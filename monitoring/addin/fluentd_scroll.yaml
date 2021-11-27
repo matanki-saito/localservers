@@ -60,6 +60,8 @@ spec:
             value: disable
           - name: FLUENTD_PROMETHEUS_CONF
             value: disable
+          - name: FLUENT_ELASTICSEARCH_LOGSTASH_INDEX_NAME
+            value: ${tag}
         resources:
           limits:
             memory: 200Mi
@@ -111,7 +113,7 @@ data:
       @id henrietta_in_tail_container_logs
       path /var/log/containers/henrietta-*.log
       pos_file /var/log/henrietta-fluentd-containers.log.pos
-      tag kubernetes.*
+      tag henrietta
       read_from_head true
       <parse>
         @type cri
@@ -126,7 +128,7 @@ data:
       @id triela_in_tail_container_logs
       path /var/log/containers/triela-*.log
       pos_file /var/log/triela-fluentd-containers.log.pos
-      tag kubernetes.*
+      tag triela
       read_from_head true
       <parse>
         @type cri
@@ -135,4 +137,28 @@ data:
           @type ltsv
         </parse>
       </parse>
+    </source>
+    <source>
+      @type tail
+      @id eu4wiki_in_tail_container_logs
+      path /var/log/containers/eu4wiki-*.log
+      pos_file /var/log/eu4wiki-fluentd-containers.log.pos
+      tag eu4wiki
+      format apache2
+    </source>
+    <source>
+      @type tail
+      @id ck2wiki_in_tail_container_logs
+      path /var/log/containers/ck2wiki-*.log
+      pos_file /var/log/ck2wiki-fluentd-containers.log.pos
+      tag ck2wiki
+      format apache2
+    </source>
+    <source>
+      @type tail
+      @id ck3wiki_in_tail_container_logs
+      path /var/log/containers/ck3wiki-*.log
+      pos_file /var/log/ck3wiki-fluentd-containers.log.pos
+      tag ck3wiki
+      format apache2
     </source>
