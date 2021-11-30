@@ -119,9 +119,11 @@ data:
       read_from_head true
       <parse>
         @type cri
-        time_format %iso8601
         <parse>
           @type ltsv
+          time_key date
+          time_type string
+          time_format %iso8601
         </parse>
       </parse>
     </source>
@@ -134,9 +136,11 @@ data:
       read_from_head true
       <parse>
         @type cri
-        time_format %iso8601
         <parse>
           @type ltsv
+          time_key date
+          time_type string
+          time_format %iso8601
         </parse>
       </parse>
     </source>
@@ -148,9 +152,11 @@ data:
       tag eu4wiki
       <parse>
         @type cri
-        time_format %iso8601
         <parse>
           @type apache2
+          time_key time
+          time_type string
+          time_format %d/%b/%Y:%H:%M:%S %z
         </parse>
       </parse>
     </source>
@@ -162,9 +168,11 @@ data:
       tag ck2wiki
       <parse>
         @type cri
-        time_format %iso8601
         <parse>
           @type apache2
+          time_key time
+          time_type string
+          time_format %d/%b/%Y:%H:%M:%S %z
         </parse>
       </parse>
     </source>
@@ -176,9 +184,11 @@ data:
       tag ck3wiki
       <parse>
         @type cri
-        time_format %iso8601
         <parse>
           @type apache2
+          time_key time
+          time_type string
+          time_format %d/%b/%Y:%H:%M:%S %z
         </parse>
       </parse>
     </source>
