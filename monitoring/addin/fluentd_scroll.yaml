@@ -64,6 +64,8 @@ spec:
             value: ${tag}
           - name: FLUENT_ELASTICSEARCH_LOGSTASH_FORMAT
             value: "false"
+          - name: FLUENT_ELASTICSEARCH_INCLUDE_TIMESTAMP
+            value: "true"
         resources:
           limits:
             memory: 200Mi
