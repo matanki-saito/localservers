@@ -63,6 +63,8 @@ spec:
       containers:
       - image: elasticsearch:7.6.2
         name: elasticsearch
+        environment:
+          ES_JAVA_OPTS: "-Dlog4j2.formatMsgNoLookups=true"
         envFrom:
         - secretRef:
             name: elasticsearch-env-secret
