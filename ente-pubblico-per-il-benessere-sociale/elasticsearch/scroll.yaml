@@ -64,7 +64,8 @@ spec:
       - image: elasticsearch:7.6.2
         name: elasticsearch
         env:
-        - "ES_JAVA_OPTS=-Dlog4j2.formatMsgNoLookups=true"
+        - name: ES_JAVA_OPTS
+          value: "-Dlog4j2.formatMsgNoLookups=true"
         envFrom:
         - secretRef:
             name: elasticsearch-env-secret
