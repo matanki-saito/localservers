@@ -61,7 +61,7 @@ spec:
         version: v1
     spec:
       containers:
-      - image: elasticsearch:7.6.2
+      - image: elasticsearch:7.16.1
         name: elasticsearch
         env:
         - name: ES_JAVA_OPTS
