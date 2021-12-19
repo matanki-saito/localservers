@@ -90,13 +90,41 @@ $ sudo snap install helm --classic
 ...
 ```
 
+## Prepare namespace
+
+Create namespaces.
+
+- argocd
+- monitoring
+- backup
+- wikis
+- ente-pubblico-per-il-benessere-sociale
+- cert-manager
+
+```sh
+$ microk8s.kubectl create namespace argocd
+namespace/argocd created
+...
+```
+
+Attach the `istio-injection=enabled` label to following namespaces.
+
+- argocd
+- monitoring
+- wikis
+- ente-pubblico-per-il-benessere-sociale
+
+```sh
+$ microk8s.kubectl label namespace argocd istio-injection=enabled
+namespace/argocd labeled
+...
+```
+
 ## Install argocd by helm
 
 ```sh
 $ helm repo add argo https://argoproj.github.io/argo-helm
 ...
-$ microk8s.kubectl create namespace argocd
-namespace/argocd created
 $ helm install helm-argocd-release argo/argo-cd -n argocd --set server.extraArgs={--insecure}
 ...
 ```
@@ -130,15 +158,6 @@ Ref: https://istio.io/latest/docs/ops/configuration/traffic-management/network-t
 1. Open `istio-ingressgateway` service yaml by LENS.
 2. Change externalTrafficPolicy type from `Cruster` to `Local`.
 
-## Create applications namespace and settings
-
-```sh
-$ microk8s.kubectl create namespace ente-pubblico-per-il-benessere-sociale
-...
-$ microk8s.kubectl label namespace ente-pubblico-per-il-benessere-sociale istio-injection=enabled
-namespace/ente-pubblico-per-il-benessere-sociale labeled
-```
-
 ## Install istio tools
 
 ```sh
@@ -151,8 +170,6 @@ $ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/sam
 ## Install cert-manager
 
 ```sh
-$ microk8s.kubectl create namespace cert-manager
-...
 $ helm repo add jetstack https://charts.jetstack.io
 ...
 $ helm repo update
@@ -162,12 +179,35 @@ $ helm install cert-manager jetstack/cert-manager --namespace cert-manager --ver
 
 ## Apply manifests to cluster using argocd
 
-0. Set repositories(localservers(this repository) and localservers-private(private repositories))
-1. Create apps(henrietta,rico,triela,redis,mysql,es) from /ente-pubblico-per-il-benessere-sociale
-2. Create apps(refer to kube-prometheus) from /monitoring
-3. Create apps(grafana gateway,process-exporter) from /monitoring/addin
-4. Create app(rate-limiter) from rate-limiter
-5. Create apps from wikis (ck2wiki,ck3wiki,eu4wiki,wikidb,wikiredis)
+Create apps from manifests.
+
+### backup
+
+Backup data to S3.
+
+### monitoring
+
+Kibana, grafana etc
+
+### wikis
+
+EU4 legacy wiki, CK2 legacy wiki, ck3 mediawiki
+
+### ente-pubblico-per-il-benessere-sociale
+
+rico, henrietta, triela
+
+### checkpoint
+
+IP block by istio
+
+### rate-limiter
+
+rate limit for eu4 wiki
+
+### argocd
+
+argocd gateway, argocd notifications
 
 ## Setup argocd notifications
 
