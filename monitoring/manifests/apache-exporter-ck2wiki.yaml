@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ck2-wiki-apache-exporter-servicemonitor
+  namespace: monitoring
+spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 9117
+  jobLabel: app
+  selector:
+    matchLabels:
+      app: ck2-wiki-apache-exporter-app
