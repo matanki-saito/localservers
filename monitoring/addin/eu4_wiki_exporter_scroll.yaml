@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  name: eu4-wiki-apache-exporter-sv
+  labels:
+    app: eu4-wiki-apache-exporter-app
+    service: eu4-wiki-apache-exporter-sv
+spec:
+  ports:
+  - port: 9117
+    targetPort: 9117
+    name: http
+  selector:
+    app: eu4-wiki-apache-exporter-app
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: monitoring
+  name: eu4-wiki-apache-exporter-ds
+  labels:
+    app: eu4-wiki-apache-exporter-app
+spec:
+  selector:
+    matchLabels:
+      app: eu4-wiki-apache-exporter-app
+      version: v1
+  template:
+    metadata:
+      namespace: monitoring
+      labels:
+        app: eu4-wiki-apache-exporter-app
+        version: v1
+    spec:
+      containers:
+      - name: eu4-wiki-apache-exporter-on-docker
+        image: bitnami/apache-exporter:latest
+        args:
+          - --scrape_uri="http://eu4wiki-sv.wikis.svc.cluster.local/server-status?auto"
+        ports:
+        - containerPort: 9117
+          protocol: TCP

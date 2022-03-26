@@ -65,7 +65,7 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
         jobLabel: 'app',
         endpoints: [
           {
-            targetPort: 9116,
+            targetPort: 9117,
             path: '/metrics',
           },
         ],
@@ -134,4 +134,5 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
 { ['prometheus-' + name]: kp.prometheus[name] for name in std.objectFields(kp.prometheus) } +
 { ['grafana-' + name]: kp.grafana[name] for name in std.objectFields(kp.grafana) } +
 { ['micrometer-application-' + name]: kp.micrometerApplication[name] for name in std.objectFields(kp.micrometerApplication) } +
-{ ['process-exporter-' + name]: kp.processExporter[name] for name in std.objectFields(kp.processExporter) }
+{ ['process-exporter-' + name]: kp.processExporter[name] for name in std.objectFields(kp.processExporter) } +
+{ ['apache-exporter-' + name]: kp.apacheExporter[name] for name in std.objectFields(kp.apacheExporter) }
