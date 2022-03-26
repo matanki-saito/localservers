@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  name: ck2-wiki-apache-exporter-sv
+  labels:
+    app: ck2-wiki-apache-exporter-app
+    service: ck2-wiki-apache-exporter-sv
+spec:
+  ports:
+  - port: 9117
+    targetPort: 9117
+    name: http
+  selector:
+    app: ck2-wiki-apache-exporter-app
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: monitoring
+  name: ck2-wiki-apache-exporter-ds
+  labels:
+    app: ck2-wiki-apache-exporter-app
+spec:
+  selector:
+    matchLabels:
+      app: ck2-wiki-apache-exporter-app
+      version: v1
+  template:
+    metadata:
+      namespace: monitoring
+      labels:
+        app: ck2-wiki-apache-exporter-app
+        version: v1
+    spec:
+      containers:
+      - name: ck2-wiki-apache-exporter-on-docker
+        image: bitnami/apache-exporter:latest
+        args:
+          - --scrape_uri="http://ck2wiki-sv.wikis.svc.cluster.local/server-status?auto"
+        ports:
+        - containerPort: 9117
+          protocol: TCP

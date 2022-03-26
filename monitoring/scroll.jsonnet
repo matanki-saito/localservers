@@ -31,6 +31,52 @@ local kp = (import 'kube-prometheus/main.libsonnet') + {
       },
     },
   },
+  apacheExporter: {
+    ck2wiki: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
+      metadata: {
+        name: 'ck2-wiki-apache-exporter-servicemonitor',
+        namespace: 'monitoring',
+      },
+      spec: {
+        jobLabel: 'app',
+        endpoints: [
+          {
+            targetPort: 9117,
+            path: '/metrics',
+          },
+        ],
+        selector: {
+          matchLabels: {
+            'app': 'ck2-wiki-apache-exporter-app',
+          },
+        },
+      },
+    },
+    eu4wiki: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
+      metadata: {
+        name: 'eu4-wiki-apache-exporter-servicemonitor',
+        namespace: 'monitoring',
+      },
+      spec: {
+        jobLabel: 'app',
+        endpoints: [
+          {
+            targetPort: 9116,
+            path: '/metrics',
+          },
+        ],
+        selector: {
+          matchLabels: {
+            'app': 'eu4-wiki-apache-exporter-app',
+          },
+        },
+      },
+    },
+  },
   micrometerApplication: {
     serviceMonitorHenrietta: {
       apiVersion: 'monitoring.coreos.com/v1',
