@@ -37,7 +37,7 @@ spec:
       - name: eu4-wiki-apache-exporter-on-docker
         image: bitnami/apache-exporter:latest
         args:
-          - --scrape_uri="http://eu4wiki-sv.wikis.svc.cluster.local/server-status?auto"
+          - --scrape_uri=http://eu4wiki-sv.wikis.svc.cluster.local/server-status?auto
         ports:
         - containerPort: 9117
           protocol: TCP
