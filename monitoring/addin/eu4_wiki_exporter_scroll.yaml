@@ -38,6 +38,7 @@ spec:
         image: bitnami/apache-exporter:latest
         args:
           - --scrape_uri=http://eu4wiki-sv.wikis.svc.cluster.local/server-status?auto
+          - --host_override=eu4.paradwiki.org
         ports:
         - containerPort: 9117
           protocol: TCP
