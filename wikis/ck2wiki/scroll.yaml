@@ -17,6 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: ck2wiki-pv-claim
+  namespace: wikis
 spec:
   storageClassName: manual
   accessModes:
