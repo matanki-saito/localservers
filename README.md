@@ -1,6 +1,6 @@
 # Localservers
 
-![flows.png](flows.png)
+![flows.png](img/flows.png)
 
 ## Set up machine
 
@@ -179,7 +179,9 @@ $ helm install cert-manager jetstack/cert-manager --namespace cert-manager --ver
 
 ## Apply manifests to cluster using argocd
 
-Create apps from manifests.
+Log in to Argocd. The admin username is `admin`. The admin Password exists in `secrets/argocd-initial-admin-secret`.
+
+Create a Project and create the following Applications in it.
 
 ### backup
 
@@ -208,6 +210,33 @@ rate limit for eu4 wiki
 ### argocd
 
 argocd gateway, argocd notifications
+
+## Setup argocd user(SSO)
+
+Assign a Role to Project. In OIDC group names, enter the Email Address used by your Github account.
+
+![role.png](img/argocdrole.png)
+
+Create an [OAuth Application on Github](https://github.com/settings/developers).
+
+Open `configmap/arogocd-cm` with LENS. Set dex.config and url to data section.([ref](https://zenn.dev/kou_pg_0131/articles/argocd-sso-github))
+
+```yml
+data:
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: xxxxxxxxxxxxxxx
+          clientSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  url: http://localhost:55699/
+```
+
+Set `scope` to the data section in `configmap/argocd-rbac-cm`. If the data section is empty, LENS cannot set it.
+
+`kubectl -n argocd patch configmap argocd-rbac-cm -p'{"data":{"scrope":"[email]"}}'`
 
 ## Setup argocd notifications
 
