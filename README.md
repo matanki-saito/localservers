@@ -187,6 +187,8 @@ Create a Project and create the following Applications in it.
 
 Backup data to S3.
 
+**Istio blocks communication to MySQL, so sidecar is required for pod. But since sidecar does not exit, cronjob does not exit.With this in mind, the mysql backup job should be deamonset.Then, if you dump immediately after the pod starts, the process fails. You need a 60 second sleep before istio is ready.**
+
 ### monitoring
 
 Kibana, grafana etc
