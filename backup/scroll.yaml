@@ -89,5 +89,6 @@ spec:
               - secretRef:
                   name: mysql-backup-env-secret
             securityContext:
-              privileged: true
+              runAsUser: 1005
+              runAsGroup: 1005
           restartPolicy: "Never"
