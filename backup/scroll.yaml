@@ -88,6 +88,4 @@ spec:
             envFrom:
               - secretRef:
                   name: mysql-backup-env-secret
-            args:
-              - no-cron
           restartPolicy: "OnFailure"
