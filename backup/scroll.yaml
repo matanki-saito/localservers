@@ -78,9 +78,6 @@ spec:
   jobTemplate:
     spec:
       template:
-        metadata:
-          annotations:
-            sidecar.istio.io/inject: "false"
         spec:
           containers:
           - name: mysql-backup-docker
@@ -88,7 +85,4 @@ spec:
             envFrom:
               - secretRef:
                   name: mysql-backup-env-secret
-            securityContext:
-              runAsUser: 1005
-              runAsGroup: 1005
           restartPolicy: "Never"
