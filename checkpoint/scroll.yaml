@@ -1,19 +1,6 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: ingress-policy-argocd
-  namespace: argocd
-spec:
-  action: ALLOW
-  rules:
-  - from:
-    - source:
-       remoteIpBlocks: 
-        - "192.168.1.2"
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
   name: ingress-policy-monitoring
   namespace: monitoring
 spec:
@@ -23,6 +10,7 @@ spec:
     - source:
        remoteIpBlocks: 
         - "192.168.1.2"
+        - "10.1.111.0/22"
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
