@@ -88,4 +88,4 @@ spec:
             envFrom:
               - secretRef:
                   name: mysql-backup-env-secret
-          restartPolicy: "OnFailure"
+          restartPolicy: "Never"
