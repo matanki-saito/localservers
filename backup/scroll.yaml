@@ -79,6 +79,7 @@ spec:
     spec:
       template:
         spec:
+          activeDeadlineSeconds: 500
           containers:
           - name: mysql-backup-docker
             image: databack/mysql-backup
