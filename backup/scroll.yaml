@@ -87,3 +87,29 @@ spec:
               - secretRef:
                   name: mysql-backup-env-secret
           restartPolicy: "Never"
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
+  name: mysql-backup-batch-ds
+  labels:
+    app: mysql-backup-batch-ds
+spec:
+  selector:
+    matchLabels:
+      app: mysql-backup-batch-app
+      version: v1
+  template:
+    metadata:
+      namespace: ente-pubblico-per-il-benessere-sociale
+      labels:
+        app: mysql-backup-batch-app
+        version: v1
+    spec:
+      containers:
+      - name: mysql-backup-docker
+        image: databack/mysql-backup
+        envFrom:
+          - secretRef:
+              name: mysql-backup-env-secret
