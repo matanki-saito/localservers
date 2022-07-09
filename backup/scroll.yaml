@@ -65,3 +65,29 @@ spec:
             - name: eu4wiki-persistent-storage
               persistentVolumeClaim:
                 claimName: eu4wiki-pv-claim
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: ente-pubblico-per-il-benessere-sociale
+  name: mysql-backup-batch
+spec:
+  schedule: "1 0 */2 * *"
+  concurrencyPolicy: "Forbid"
+  startingDeadlineSeconds: 600
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+          - name: mysql-backup-docker
+            image: databack/mysql-backup
+            envFrom:
+              - secretRef:
+                  name: mysql-backup-env-secret
+            args:
+              - no-cron
+          restartPolicy: "OnFailure"
