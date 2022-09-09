@@ -62,6 +62,10 @@ spec:
         app: ck3wiki-app
         version: v1
     spec:
+      hostAliases:
+      - ip: "10.152.183.93"
+        hostnames:
+        - "ck3wiki.popush.cloud"
       containers:
       - name: ck3wiki-mediawiki
         image: gnagaoka/ck3wiki:latest
