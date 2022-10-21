@@ -7,14 +7,14 @@
 For instance
 
 - Server machine 192.168.1.20
-  - Ubuntu: 20.04
-  - memory 16GB
+  - Ubuntu: 22.04
+  - memory 32GB
   - `ufw allow 22`
   - `ufw allow 16443`
   - `ufw allows 443`
   - `ufw allows 80`
   - Enable ssh and display sharing
-  - [Enable xserver-xorg-video-dummy](http://rarak.jp/16022)
+  - [Enable xserver-xorg-video-dummy](http://rarak.jp/16022) if machine has no internal graphic
 - Console machine 192.168.1.2
   - Windows: 10
   - SSH by Windows terminal
@@ -51,8 +51,8 @@ sudo sysctl vm.vfs_cache_pressure=50
 $ sudo apt install net-tools
 ...
 $ ip addr
-2: enp2s0: ...
-$ sudo ifconfig enp2s0:1 192.168.1.100 netmask 255.255.255.0
+2: eno1: ...
+$ sudo ifconfig eno1:1 192.168.1.100 netmask 255.255.255.0
 ```
 
 Refer to [here](http://pentan.info/server/linux/nic_sub_ip.html)
@@ -61,16 +61,16 @@ Refer to [here](http://pentan.info/server/linux/nic_sub_ip.html)
 
 ```sh
 $ sudo snap install microk8s --classic
-microk8s (1.20/stable) v1.20.2 from Canonical✓ installed
+microk8s (1.25/stable) v1.25.2 from Canonical✓ installed
 ```
 
 ## Enable add-on
 
 ```sh
-$ microk8s enable dns
+$ sudo microk8s enable dns
 ...
 DNS is enabled
-$ microk8s enable metallb
+$ sudo microk8s enable metallb
 Enter each IP: 192.168.1.100-192.168.1.110
 ...
 MetalLB is enabled
@@ -79,7 +79,8 @@ MetalLB is enabled
 ## Put config to server machine
 
 ```sh
-$ microk8s.kubetl config view --raw > ~/.kube/config
+$ mkdir ~/.kube
+$ sudo microk8s.kubetl config view --raw > ~/.kube/config
 ...
 ```
 
@@ -102,7 +103,7 @@ Create namespaces.
 - cert-manager
 
 ```sh
-$ microk8s.kubectl create namespace argocd
+$ sudo microk8s.kubectl create namespace argocd
 namespace/argocd created
 ...
 ```
@@ -115,7 +116,7 @@ Attach the `istio-injection=enabled` label to following namespaces.
 - ente-pubblico-per-il-benessere-sociale
 
 ```sh
-$ microk8s.kubectl label namespace argocd istio-injection=enabled
+$ sudo microk8s.kubectl label namespace argocd istio-injection=enabled
 namespace/argocd labeled
 ...
 ```
@@ -136,9 +137,9 @@ Installation will **fail** if both dns and metallb add-on are not enabled.
 ```sh
 $ curl -L https://istio.io/downloadIstio | sh -
 ...
-$ cd istio-x.x.x/bin/
+$ cd istio-1.15.2/bin/
 $ ./istioctl install --set profile=default
-This will install the Istio 1.9.1 default profile with ["Istio core" "Istiod" "Ingress gateways"] components into the cluster. Proceed? (y/N) y
+This will install the Istio 1.15.2 default profile with ["Istio core" "Istiod" "Ingress gateways"] components into the cluster. Proceed? (y/N) y
 ✔ Istio core installed
 ✔ Istiod installed
 ✔ Ingress gateways installed
@@ -151,7 +152,7 @@ Ref: https://istio.io/latest/docs/ops/configuration/traffic-management/network-t
 
 1. Create topology.yaml
 2. Install topology.yaml using istioctl
-3. Restert istio Deployments
+3. Restert istiod Deployments by lens
 
 ## Change externalTrafficPolicy type from Cruster to Local
 
@@ -161,9 +162,9 @@ Ref: https://istio.io/latest/docs/ops/configuration/traffic-management/network-t
 ## Install istio tools
 
 ```sh
-$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/samples/addons/kiali.yaml
+$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.15/samples/addons/kiali.yaml
 ...
-$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.9/samples/addons/prometheus.yaml
+$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.15/samples/addons/prometheus.yaml
 ...
 ```
 
@@ -174,7 +175,7 @@ $ helm repo add jetstack https://charts.jetstack.io
 ...
 $ helm repo update
 ...
-$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
+$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.10.0 --create-namespace --set installCRDs=true
 ```
 
 ## Apply manifests to cluster using argocd
