@@ -29,7 +29,7 @@ jobs:
           cd monitoring
           rm -rf manifests/*
           jb update
-          jb install github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus@release-0.8
+          jb install github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus@main
           ls
           ./build.sh scroll.jsonnet
 
