@@ -88,7 +88,7 @@ spec:
         - secretRef:
             name: kibana-env-secret
 ---
-apiVersion: cert-manager.io/v1alpha3
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: kibana-letsencrypt-issuer
