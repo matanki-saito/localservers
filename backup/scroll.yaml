@@ -4,7 +4,7 @@ metadata:
   namespace: wikis
   name: ck2wiki-backup-batch
 spec:
-  schedule: "10 */12 * * *"
+  schedule: "10 */36 * * *"
   concurrencyPolicy: "Forbid"
   startingDeadlineSeconds: 600
   jobTemplate:
@@ -65,6 +65,40 @@ spec:
             - name: eu4wiki-persistent-storage
               persistentVolumeClaim:
                 claimName: eu4wiki-pv-claim
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: wikis
+  name: ck3wiki-backup-batch
+spec:
+  schedule: "15 */36 * * *"
+  concurrencyPolicy: "Forbid"
+  startingDeadlineSeconds: 600
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+          - name: ck3wiki-backup-docker
+            image: istepanov/backup-to-s3
+            envFrom:
+              - secretRef:
+                  name: ck3wiki-backup-env-secret
+            volumeMounts:
+              - name: ck3wiki-persistent-storage
+                mountPath: /data
+                readOnly: true
+            args:
+              - no-cron
+          restartPolicy: "OnFailure"
+          volumes:
+            - name: ck3wiki-persistent-storage
+              persistentVolumeClaim:
+                claimName: ck3wiki-pv-claim
 ---
 apiVersion: apps/v1
 kind: DaemonSet
