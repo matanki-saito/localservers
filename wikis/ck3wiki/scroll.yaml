@@ -63,7 +63,7 @@ spec:
         version: v1
     spec:
       hostAliases:
-      - ip: "10.152.183.93"
+      - ip: "10.152.183.126"
         hostnames:
         - "ck3wiki.popush.cloud"
       containers:
