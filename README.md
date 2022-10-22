@@ -194,6 +194,8 @@ Backup data to S3.
 
 Kibana, grafana etc
 
+**The prometheus yaml fails to reflect because the meta data size is too large. Use "Replace" on argocd to update.**
+
 ### wikis
 
 EU4 legacy wiki, CK2 legacy wiki, ck3 mediawiki
@@ -234,8 +236,10 @@ data:
         config:
           clientID: xxxxxxxxxxxxxxx
           clientSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  url: http://localhost:55699/
+  url: https://argocd.popush.cloud
 ```
+
+Restart the repo, dex, and controller servers on argocd after fixing is complete.
 
 Set `scope` to the data section in `configmap/argocd-rbac-cm`. If the data section is empty, LENS cannot set it.
 
