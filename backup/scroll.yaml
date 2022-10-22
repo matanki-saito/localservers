@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   namespace: wikis
@@ -32,7 +32,7 @@ spec:
               persistentVolumeClaim:
                 claimName: ck2wiki-pv-claim
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   namespace: wikis
@@ -66,7 +66,7 @@ spec:
               persistentVolumeClaim:
                 claimName: eu4wiki-pv-claim
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   namespace: wikis
@@ -125,3 +125,29 @@ spec:
         envFrom:
           - secretRef:
               name: mysql-backup-env-secret
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: wikis
+  name: wikidb-backup-batch-ds
+  labels:
+    app: wikidb-backup-batch-ds
+spec:
+  selector:
+    matchLabels:
+      app: wikidb-backup-batch-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: wikidb-backup-batch-app
+        version: v1
+    spec:
+      containers:
+      - name: wikidb-backup-docker
+        image: databack/mysql-backup
+        envFrom:
+          - secretRef:
+              name: wikidb-backup-env-secret
