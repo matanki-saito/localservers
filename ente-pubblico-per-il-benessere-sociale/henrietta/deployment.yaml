@@ -24,7 +24,7 @@ spec:
         - name: henrietta-springboot
           image: gnagaoka/henrietta-app:0.1.55
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           envFrom:
             - secretRef:
                 name: henrietta-env-secret
