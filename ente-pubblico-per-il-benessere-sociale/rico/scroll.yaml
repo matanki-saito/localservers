@@ -93,14 +93,14 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-issuer
+  name: rico-letsencrypt-issuer
   namespace: istio-system
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: matanki.saito@gmail.com
     privateKeySecretRef:
-      name: letsencrypt-issuer-private-key
+      name: rico-letsencrypt-issuer-private-key
     solvers:
     - dns01:
         route53:
