@@ -1,4 +1,6 @@
-local kp = (import 'kube-prometheus/main.libsonnet') + {
+local kp = 
+  (import 'kube-prometheus/main.libsonnet') +
+  (import 'kube-prometheus/addons/insecure-kubelet.libsonnet') + {
   values+:: {
     common+: {
       namespace: 'monitoring',
