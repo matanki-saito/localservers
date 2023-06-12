@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.1
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: servicemonitors.monitoring.coreos.com
 spec:
@@ -170,10 +170,6 @@ spec:
                             - Lowercase
                             - uppercase
                             - Uppercase
-                            - keepequal
-                            - KeepEqual
-                            - dropequal
-                            - DropEqual
                             type: string
                           modulus:
                             description: Modulus to take of the hash of the source label values.
@@ -317,10 +313,6 @@ spec:
                             - Lowercase
                             - uppercase
                             - Uppercase
-                            - keepequal
-                            - KeepEqual
-                            - dropequal
-                            - DropEqual
                             type: string
                           modulus:
                             description: Modulus to take of the hash of the source label values.
@@ -348,10 +340,7 @@ spec:
                         type: object
                       type: array
                     scheme:
-                      description: HTTP scheme to use for scraping. `http` and `https` are the expected values unless you rewrite the `__scheme__` label via relabeling. If empty, Prometheus uses the default value `http`.
-                      enum:
-                      - http
-                      - https
+                      description: HTTP scheme to use for scraping.
                       type: string
                     scrapeTimeout:
                       description: Timeout after which the scrape is ended If not specified, the Prometheus global scrape timeout is used unless it is less than `Interval` in which the latter is used.
