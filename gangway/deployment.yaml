@@ -13,7 +13,7 @@ spec:
       version: v1
   template:
     metadata:
-      namespace: ente-pubblico-per-il-benessere-sociale
+      namespace: gangway
       labels:
         app: gate-app
         version: v1
