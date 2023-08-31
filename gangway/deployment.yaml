@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: gangway
+  name: gate-deployment
+  labels:
+    app: gate-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gate-app
+      version: v1
+  template:
+    metadata:
+      namespace: ente-pubblico-per-il-benessere-sociale
+      labels:
+        app: gate-app
+        version: v1
+    spec:
+      imagePullSecrets:
+      - name: github-repository-secret
+      containers:
+      - name: gate-springboot
+        image: ghcr.io/matanki-saito/gate-app:0.1.0
+        ports:
+        - name: http
+          containerPort: 80
+        - name: grpc
+          containerPort: 9000
+        envFrom:
+        - secretRef:
+            name: gate-env-secret
