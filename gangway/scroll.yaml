@@ -16,3 +16,73 @@ spec:
     name: grpc
   selector:
     app: gate-app
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gate-mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/gate-mysql"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gate-mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gate-mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: gate-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gate-mysql
+spec:
+  selector:
+    matchLabels:
+      app: gate-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gate-mysql
+    spec:
+      containers:
+      - image: mysql:8.0.20
+        name: gate-mysql
+        envFrom:
+        - secretRef:
+            name: gate-mysql-env-secret
+        ports:
+        - containerPort: 3306
+          name: gate-mysql
+        volumeMounts:
+        - name: gate-mysql-persistent-storage
+          mountPath: /var/lib/gate-mysql
+      volumes:
+      - name: gate-mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: gate-mysql-pv-claim
