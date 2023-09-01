@@ -6,7 +6,7 @@ metadata:
   labels:
     app: gate-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: gate-app
@@ -22,7 +22,7 @@ spec:
       - name: github-repository-secret
       containers:
       - name: gate-springboot
-        image: ghcr.io/matanki-saito/gate-app:0.1.3
+        image: ghcr.io/matanki-saito/gate-app:0.1.4
         ports:
         - name: http
           containerPort: 80
