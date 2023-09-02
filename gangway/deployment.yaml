@@ -19,15 +19,15 @@ spec:
         version: v1
     spec:
       imagePullSecrets:
-      - name: github-repository-secret
+        - name: github-repository-secret
       containers:
-      - name: gate-springboot
-        image: ghcr.io/matanki-saito/gate-app:0.1.7
-        ports:
-        - name: http
-          containerPort: 80
-        - name: grpc
-          containerPort: 9000
-        envFrom:
-        - secretRef:
-            name: gate-env-secret
+        - name: gate-springboot
+          image: ghcr.io/matanki-saito/gate-app:0.1.8
+          ports:
+            - name: http
+              containerPort: 80
+            - name: grpc
+              containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: gate-env-secret
