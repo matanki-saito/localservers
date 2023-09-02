@@ -16,37 +16,37 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: istio-system
-  name: rate-limiter-redis
+  namespace: gangway
+  name: gangway-redis
   labels:
-    app: rate-limiter-redis
+    app: gangway-redis
 spec:
   ports:
-  - name: rate-limiter-redis
+  - name: gangway-redis
     port: 6379
   selector:
-    app: rate-limiter-redis
+    app: gangway-redis
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: istio-system
-  name: rate-limiter-redis-dp
+  namespace: gangway
+  name: gangway-redis-dp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rate-limiter-redis
+      app: gangway-redis
   template:
     metadata:
-      namespace: istio-system
+      namespace: gangway
       labels:
-        app: rate-limiter-redis
+        app: gangway-redis
     spec:
       containers:
       - image: redis:alpine
         imagePullPolicy: Always
-        name: rate-limiter-redis-container
+        name: gangway-redis-container
         ports:
         - name: redis
           containerPort: 6379
@@ -56,7 +56,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: istio-system
+  namespace: gangway
   name: ratelimit
   labels:
     app: ratelimit
@@ -80,7 +80,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: istio-system
+  namespace: gangway
   name: ratelimit
 spec:
   replicas: 1
@@ -91,7 +91,7 @@ spec:
     type: Recreate
   template:
     metadata:
-      namespace: istio-system
+      namespace: gangway
       labels:
         app: ratelimit
     spec:
@@ -106,7 +106,7 @@ spec:
         - name: REDIS_SOCKET_TYPE
           value: tcp
         - name: REDIS_URL
-          value: rate-limiter-redis:6379
+          value: gangway-redis:6379
         - name: USE_STATSD
           value: "false"
         - name: RUNTIME_ROOT
@@ -162,7 +162,7 @@ spec:
     - applyTo: CLUSTER
       match:
         cluster:
-          service: ratelimit.istio-system.svc.cluster.local
+          service: ratelimit.gangway.svc.cluster.local
       patch:
         operation: ADD
         value:
@@ -178,7 +178,7 @@ spec:
               - endpoint:
                   address:
                      socket_address:
-                      address: ratelimit.istio-system.svc.cluster.local
+                      address: ratelimit.gangway.svc.cluster.local
                       port_value: 8081
 ---
 apiVersion: networking.istio.io/v1alpha3
