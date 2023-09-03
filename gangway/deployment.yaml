@@ -22,7 +22,7 @@ spec:
         - name: github-repository-secret
       containers:
         - name: gate-springboot
-          image: ghcr.io/matanki-saito/gate-app:0.1.16
+          image: ghcr.io/matanki-saito/gate-app:0.1.17
           ports:
             - name: http
               containerPort: 80
