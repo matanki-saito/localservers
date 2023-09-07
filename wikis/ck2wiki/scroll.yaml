@@ -58,6 +58,7 @@ spec:
     hosts:
     - "ck2wiki.popush.cloud"
     - "ck2.paradwiki.org"
+    - "ck2.paradoxwiki.org"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -68,6 +69,7 @@ spec:
   hosts:
   - "ck2wiki.popush.cloud"
   - "ck2.paradwiki.org"
+  - "ck2.paradoxwiki.org"
   gateways:
   - ck2-gateway
   http:

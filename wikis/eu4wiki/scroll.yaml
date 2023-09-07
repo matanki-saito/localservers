@@ -58,6 +58,7 @@ spec:
     hosts:
     - "eu4wiki.popush.cloud"
     - "eu4.paradwiki.org"
+    - "eu4.paradoxwiki.org"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -68,6 +69,7 @@ spec:
   hosts:
   - "eu4wiki.popush.cloud"
   - "eu4.paradwiki.org"
+  - "eu4.paradoxwiki.org"
   gateways:
   - eu4-gateway
   http:
