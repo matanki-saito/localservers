@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: eu4wiki-r-deployment
+  labels:
+    app: eu4wiki-r-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eu4wiki-r-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: eu4wiki-r-app
+        version: v1
+    spec:
+      containers:
+        - name: eu4wiki-r-redirector
+          image: morbz/docker-web-redirect
+          ports:
+            - containerPort: 80
+          env:
+          - name: VIRTUAL_HOST
+            value: "eu4.paradwiki.org"
+          - name: REDIRECT_TARGET
+            value: "eu4.paradoxwiki.org"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wikis
+  name: eu4wiki-r-sv
+  labels:
+    app: eu4wiki-r-app
+    service: eu4wiki-r-sv
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    app: eu4wiki-r-app
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: wikis
+  name: eu4-r-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "eu4.paradwiki.org"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: wikis
+  name: eu4wiki-r-vs
+spec:
+  hosts:
+  - "eu4.paradwiki.org"
+  gateways:
+  - eu4-r-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: eu4wiki-r-sv
+        port:
+          number: 80
