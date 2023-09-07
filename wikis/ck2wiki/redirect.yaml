@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wikis
+  name: ck2wiki-r-deployment
+  labels:
+    app: ck2wiki-r-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ck2wiki-r-app
+      version: v1
+  template:
+    metadata:
+      namespace: wikis
+      labels:
+        app: ck2wiki-r-app
+        version: v1
+    spec:
+      containers:
+        - name: ck2wiki-r-redirector
+          image: morbz/docker-web-redirect
+          ports:
+            - containerPort: 80
+          env:
+          - name: VIRTUAL_HOST
+            value: "ck2.paradwiki.org"
+          - name: REDIRECT_TARGET
+            value: "ck2.paradoxwiki.org"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wikis
+  name: ck2wiki-r-sv
+  labels:
+    app: ck2wiki-r-app
+    service: ck2wiki-r-sv
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    app: ck2wiki-r-app
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: wikis
+  name: ck2-r-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "ck2.paradwiki.org"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: wikis
+  name: ck2wiki-r-vs
+spec:
+  hosts:
+  - "ck2.paradwiki.org"
+  gateways:
+  - ck2-r-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: ck2wiki-r-sv
+        port:
+          number: 80
