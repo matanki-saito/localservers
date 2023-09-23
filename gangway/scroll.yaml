@@ -81,7 +81,7 @@ spec:
           name: gate-mysql
         volumeMounts:
         - name: gate-mysql-persistent-storage
-          mountPath: /var/lib/gate-mysql
+          mountPath: /var/lib/mysql
       volumes:
       - name: gate-mysql-persistent-storage
         persistentVolumeClaim:
