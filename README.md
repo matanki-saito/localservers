@@ -58,10 +58,17 @@ $ sudo ifconfig eno1:1 192.168.1.100 netmask 255.255.255.0
 Refer to [here](http://pentan.info/server/linux/nic_sub_ip.html)
 
 ## Install microk8s
-
 ```sh
 $ sudo snap install microk8s --classic
 microk8s (1.25/stable) v1.25.2 from Canonical✓ installed
+```
+
+## Add args to kubelet
+Sets the threshold value to `/var/snap/microk8s/current/args/kubelet`
+
+```
+--image-gc-high-threshold=70
+--image-gc-low-threshold=50
 ```
 
 ## Enable add-on
