@@ -43,6 +43,8 @@ spec:
           envFrom:
             - secretRef:
                 name: keycloak-env-secret
+          args:
+            - start-dev
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
