@@ -61,6 +61,9 @@ spec:
       protocol: HTTPS
     hosts:
     - "keycloak.popush.cloud"
+    tls:
+      mode: SIMPLE
+      credentialName: keycloak-popush-cloud-tls
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
