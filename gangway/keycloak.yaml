@@ -44,7 +44,8 @@ spec:
             - secretRef:
                 name: keycloak-env-secret
           args:
-            - start-dev
+            - start
+            - "--proxy edge"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
