@@ -1,6 +1,6 @@
 # Localservers
 
-![flows.png](img/flows.png)
+![netowork](img/network.jpg)
 
 ## Set up machine
 
@@ -13,13 +13,10 @@ For instance
   - `ufw allow 16443`
   - `ufw allows 443`
   - `ufw allows 80`
-  - Enable ssh and display sharing
-  - [Enable xserver-xorg-video-dummy](http://rarak.jp/16022) if machine has no internal graphic
-- Console machine 192.168.1.2
+- Console machine DHCP
   - Windows: 10
   - SSH by Windows terminal
   - [LENS](https://k8slens.dev/)
-  - VNC viewer
 
 ## Extend swap size and set swap parameters
 
@@ -71,6 +68,13 @@ Sets the threshold value to `/var/snap/microk8s/current/args/kubelet`
 --image-gc-low-threshold=50
 ```
 
+Restart microk8s
+
+```
+$ sudo microk8s stop
+$ sudo microk8s start
+```
+
 ## Enable add-on
 
 ```sh
@@ -90,6 +94,15 @@ $ mkdir ~/.kube
 $ sudo microk8s.kubetl config view --raw > ~/.kube/config
 ...
 ```
+
+Register kube config in LENS.
+
+## Add ruter IP to coreDNS
+
+Open coreDNS config Map using LENS. Put router address into forward segment.
+
+> forward . **192.168.1.1** 8.8.8.8 8.8.4.4 
+
 
 ## Install helm
 
