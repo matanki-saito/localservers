@@ -224,7 +224,7 @@ EU4 legacy wiki, CK2 legacy wiki, ck3 mediawiki
 
 rico, henrietta, triela
 
-### checkpoint
+### gangway
 
 IP block by istio
 
@@ -235,6 +235,87 @@ rate limit for eu4 wiki
 ### argocd
 
 argocd gateway, argocd notifications
+
+## Setup gangway
+link: https://istio.io/latest/docs/tasks/security/authorization/authz-custom/
+
+### Edit an istio configmap
+
+Open the "istio" ConfigMap in LENS and add the following a section and save.
+
+```
+extensionProviders:
+- name: "ext-authz-grpc"
+  envoyExtAuthzGrpc:
+    service: "external-authz-grpc.local"
+    port: "9000"
+    includeRequestBodyInCheck:
+      maxRequestBytes: 10000000 #10MB
+      packAsBytes: true
+      allowPartialMessage: true
+```
+
+### Create the ServiceEntry
+
+```
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: external-authz-grpc-local
+  namespace: wikis
+spec:
+  endpoints:
+    - address: gate-sv.gangway.svc.cluster.local
+  hosts:
+    - external-authz-grpc.local
+  ports:
+    - name: grpc
+      number: 9000
+      protocol: GRPC
+  resolution: DNS
+```
+
+### Create the AuthorizationPolicy
+The matchLabels should be the same as the Label for the Service to find Deployment.
+Create in the namespace to which you want to apply the rule.
+
+```
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ext-authz
+  namespace: wikis
+spec:
+  selector:
+    matchLabels:
+      app: eu4wiki-app
+  action: CUSTOM
+  provider:
+    name: ext-authz-grpc
+  rules:
+    - to:
+        - operation:
+            methods:
+              - POST
+```
+
+### Allow large text submissions
+Create following a resource.
+
+```
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: increasebufferlimit
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: LISTENER
+    patch:
+      operation: MERGE
+      value:
+        per_connection_buffer_limit_bytes: 10000000 #10MB
+```
 
 ## Setup argocd user(SSO)
 
