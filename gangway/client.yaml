@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gangway
+  name: gangway-client-sv
+  labels:
+    app: gangway-client-app
+    service: gangway-client-sv
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: http
+  selector:
+    app: gangway-client-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: gangway
+  name: gangway-client-deployment
+  labels:
+    app: gangway-client-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gangway-client-app
+      version: v1
+  template:
+    metadata:
+      namespace: gangway
+      labels:
+        app: gangway-client-app
+        version: v1
+    spec:
+      imagePullSecrets:
+        - name: github-repository-secret
+      containers:
+        - name: gangway-client-springboot
+          image: ghcr.io/matanki-saito/gangway-client:0.1.2
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: gangway-client-env-secret
