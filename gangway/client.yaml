@@ -38,7 +38,7 @@ spec:
         - name: github-repository-secret
       containers:
         - name: gangway-client-springboot
-          image: ghcr.io/matanki-saito/gangway-client:0.1.2
+          image: ghcr.io/matanki-saito/gangway-client:0.1.5
           ports:
             - name: http
               containerPort: 8080
