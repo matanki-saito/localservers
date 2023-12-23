@@ -4,9 +4,28 @@ local kp =
     common+: {
       namespace: 'monitoring',
     },
-    grafana+: {
+    grafana+:: {
       rawDashboards+:: {
         'node-exporter.json': (importstr 'grafana-dashboard/node-exporter_1860_rev33.json'),
+      },
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers: [
+                super.containers[0] {
+                  envFrom: [
+                    {
+                      secretRef: {
+                        name: "grafana-env-secret",
+                      },
+                    }, 
+                  ],
+                },
+              ],
+            },
+          },
+        },
       },
     },
     prometheus+:: {
