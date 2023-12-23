@@ -7,7 +7,9 @@ local kp =
     grafana+:: {
       rawDashboards+:: {
         'node-exporter.json': (importstr 'grafana-dashboard/node-exporter_1860_rev33.json'),
+        'process-exporter.json': (importstr 'grafana-dashboard/process-exporter-13882_rev9.json'),
       },
+      plugins:: ['marcusolsson-treemap-panel'],
       env: [
         {
           name: "GF_SECURITY_ADMIN_USER",
