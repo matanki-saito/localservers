@@ -22,8 +22,6 @@ local kp =
           date_formats: { default_timezone : 'JST' },
           server: {
             domain: 'grafana.popush.cloud',
-            protocol: 'https',
-            http_port: 443,
           },
         },
       },
