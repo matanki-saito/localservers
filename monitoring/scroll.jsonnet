@@ -1,5 +1,12 @@
 local kp = 
   (import 'kube-prometheus/main.libsonnet') + {
+  grafana+: {
+    networkPolicy+: {
+      spec+: {
+        ingress: [ { } ]
+      }
+    }
+  },
   values+:: {
     common+: {
       namespace: 'monitoring',
@@ -10,6 +17,16 @@ local kp =
         'process-exporter.json': (importstr 'grafana-dashboard/process-exporter-13882_rev9.json'),
       },
       plugins:: ['marcusolsson-treemap-panel'],
+      config+: {
+        sections: {
+          date_formats: { default_timezone : 'JST' },
+          server: {
+            domain: 'grafana.popush.cloud',
+            protocol: 'https',
+            http_port: 443,
+          },
+        },
+      },
       env: [
         {
           name: "GF_SECURITY_ADMIN_USER",
