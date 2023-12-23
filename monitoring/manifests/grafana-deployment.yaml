@@ -40,6 +40,8 @@ spec:
             secretKeyRef:
               key: GF_SECURITY_ADMIN_PASSWORD
               name: grafana-env-secret
+        - name: GF_INSTALL_PLUGINS
+          value: marcusolsson-treemap-panel
         image: grafana/grafana:10.2.2
         name: grafana
         ports:
@@ -142,6 +144,9 @@ spec:
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/pod-total
           name: grafana-dashboard-pod-total
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/process-exporter
+          name: grafana-dashboard-process-exporter
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/prometheus-remote-write
           name: grafana-dashboard-prometheus-remote-write
@@ -261,6 +266,9 @@ spec:
       - configMap:
           name: grafana-dashboard-node-exporter
         name: grafana-dashboard-node-exporter
+      - configMap:
+          name: grafana-dashboard-process-exporter
+        name: grafana-dashboard-process-exporter
       - name: grafana-config
         secret:
           secretName: grafana-config
