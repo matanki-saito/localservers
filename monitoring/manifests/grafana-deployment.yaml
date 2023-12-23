@@ -29,7 +29,17 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - env: []
+      - env:
+        - name: GF_SECURITY_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              key: GF_SECURITY_ADMIN_USER
+              name: grafana-env-secret
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: GF_SECURITY_ADMIN_PASSWORD
+              name: grafana-env-secret
         image: grafana/grafana:10.2.2
         name: grafana
         ports:
