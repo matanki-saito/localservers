@@ -12,13 +12,7 @@ spec:
   egress:
   - {}
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: prometheus
-    ports:
-    - port: 3000
-      protocol: TCP
+  - {}
   podSelector:
     matchLabels:
       app.kubernetes.io/component: grafana
