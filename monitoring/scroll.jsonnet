@@ -14,10 +14,23 @@ local kp =
             spec+: {
               containers: [
                 super.containers[0] {
-                  envFrom: [
+                  env: [
                     {
-                      secretRef: {
-                        name: "grafana-env-secret",
+                      name: "GF_SECURITY_ADMIN_USER",
+                      valueFrom: {
+                        secretKeyRef: {
+                          name: "grafana-credentials",
+                          key: "user",
+                        },
+                      },
+                    },
+                    {
+                      name: "GF_SECURITY_ADMIN_PASSWORD",
+                      valueFrom: {
+                        secretKeyRef: {
+                          name: "grafana-credentials",
+                          key: "password",
+                        },
                       },
                     }, 
                   ],
