@@ -8,38 +8,26 @@ local kp =
       rawDashboards+:: {
         'node-exporter.json': (importstr 'grafana-dashboard/node-exporter_1860_rev33.json'),
       },
-      deployment+: {
-        spec+: {
-          template+: {
-            spec+: {
-              containers: [
-                super.containers[0] {
-                  env: [
-                    {
-                      name: "GF_SECURITY_ADMIN_USER",
-                      valueFrom: {
-                        secretKeyRef: {
-                          name: "grafana-credentials",
-                          key: "user",
-                        },
-                      },
-                    },
-                    {
-                      name: "GF_SECURITY_ADMIN_PASSWORD",
-                      valueFrom: {
-                        secretKeyRef: {
-                          name: "grafana-credentials",
-                          key: "password",
-                        },
-                      },
-                    }, 
-                  ],
-                },
-              ],
+      env: [
+        {
+          name: "GF_SECURITY_ADMIN_USER",
+          valueFrom: {
+            secretKeyRef: {
+              name: "grafana-env-secret",
+              key: "GF_SECURITY_ADMIN_USER",
             },
           },
         },
-      },
+        {
+          name: "GF_SECURITY_ADMIN_PASSWORD",
+          valueFrom: {
+            secretKeyRef: {
+              name: "grafana-env-secret",
+              key: "GF_SECURITY_ADMIN_PASSWORD",
+            },
+          },
+        },
+      ],
     },
     prometheus+:: {
       namespaces+: ['ente-pubblico-per-il-benessere-sociale'],
