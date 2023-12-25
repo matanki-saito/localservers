@@ -24,32 +24,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: build
+      - name: Update manifests operation
         run: |
-          cd monitoring
-          rm -rf manifests/*
-          jb update
-          jb install github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus@main
-          ls
-          ./build.sh scroll.jsonnet
-
-      - name: push yaml
-        run: |
-          dir
-          git config --global user.email "matanki.saito@gmail.com"
-          git config --global user.name "matanki.saito"
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          git add -A
-          git commit -m "Save/Update files [ci skip]"
-          git push origin HEAD:main
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        continue-on-error: true
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.MY_GITHUB_TOKEN }}" \
+          https://api.github.com/repos/matanki-saito/localservers-private/actions/workflows/update.yaml/dispatches \
+          -d "{\"ref\":\"main\", \"inputs\": { \"source\":\"-\", \"target\":\"-\", \"value\":\"-\"}}"
+      
   update-target-yaml:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.source != null }}
-    needs: update-monitoring
     steps:
       - uses: actions/checkout@v2
 
