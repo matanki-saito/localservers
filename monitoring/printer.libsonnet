@@ -2,6 +2,7 @@ function(env)
   local kp = 
     (import 'kube-prometheus/main.libsonnet') + {
     grafana+: {
+      local gmeta = super._metadata,
       networkPolicy+: {
         spec+: {
           ingress: [ { } ]
@@ -10,9 +11,8 @@ function(env)
       alertConfigAndRules: {
         apiVersion: 'v1',
         kind: 'Secret',
-        metadata: {
+        metadata: gmeta + {
           name: 'grafana-alerting',
-          namespace: monitoring,
         },
         type: 'Opaque',
         stringData: {
