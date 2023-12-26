@@ -30,10 +30,10 @@ function(env)
                       disableResolveMessage: false,
                       settings: {
                         url: env.grafana.alert.discordwebhook,
-                        use_discord_username: 'grafana-alert',
-                          message: |||
-                            {{ template "default.message" . }}
-                          |||
+                        use_discord_username: false,
+                        message: |||
+                          {{ template "default.message" . }}
+                        |||
                       }
                     }
                   ]
