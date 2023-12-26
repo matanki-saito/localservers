@@ -50,8 +50,8 @@ function(env)
               volumes+: [
                 {
                   name: 'grafana-alerting',
-                  configMap: { name: 'grafana-alerting' },
-                }
+                  secret: { secretName: 'grafana-alerting' },
+                },
               ],
               containers: [
                 super.containers[0] + {
