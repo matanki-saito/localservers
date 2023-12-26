@@ -6,6 +6,64 @@ function(env)
         spec+: {
           ingress: [ { } ]
         }
+      },
+      alertConfigAndRules: {
+        apiVersion: 'v1',
+        kind: 'Secret',
+        metadata: {
+          name: 'grafana-alerting',
+        },
+        type: 'Opaque',
+        stringData: {
+          'provisioning.yaml': std.manifestJsonEx(
+            {
+              apiVersion: 1,
+              contactPoints: [
+                {
+                  orgId: 1,
+                  name: 'dev-discord',
+                  receivers: [
+                    {
+                      uid: '69b0ad9d-1e93-4a79-96ce-d2292e84fa4c',
+                      type: 'discord',
+                      disableResolveMessage: false,
+                      settings: {
+                        url: env.grafana.alert.discordwebhook,
+                        use_discord_username: 'grafana-alert',
+                          message: |||
+                            {{ template "default.message" . }}
+                          |||
+                      }
+                    }
+                  ]
+                }
+              ],
+            }, '    '
+          ),
+        },
+      },
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              volumes+: [
+                {
+                  name: 'grafana-alerting',
+                  configMap: { name: 'grafana-alerting' },
+                }
+              ],
+              containers: [
+                super.containers[0] + {
+                  volumeMounts+: [{
+                    name: 'grafana-alerting',
+                    mountPath: '/etc/grafana/provisioning/alerting',
+                    readOnly: false,
+                  }],
+                }
+              ] + super.containers[1:]
+            }
+          }
+        }
       }
     },
 

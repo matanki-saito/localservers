@@ -4,6 +4,9 @@ local env = {
             name: 'gnagaoka',
             pass: 'abc',
         },
+        alert: {
+            discordwebhook: 'xxxxxxxx'
+        }
     },
 };
 
