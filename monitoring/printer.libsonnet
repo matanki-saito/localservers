@@ -12,6 +12,7 @@ function(env)
         kind: 'Secret',
         metadata: {
           name: 'grafana-alerting',
+          namespace: monitoring,
         },
         type: 'Opaque',
         stringData: {
