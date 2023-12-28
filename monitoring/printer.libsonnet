@@ -83,6 +83,7 @@ function(env)
             date_formats: { default_timezone : 'JST' },
             server: {
               domain: 'grafana.popush.cloud',
+              root_url: 'https://%(domain)s/grafana/'
             },
           },
         },

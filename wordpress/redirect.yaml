@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: wordpress
+  name: wordpress-r-deployment
+  labels:
+    app: wordpress-r-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress-r-app
+      version: v1
+  template:
+    metadata:
+      namespace: wordpress
+      labels:
+        app: wordpress-r-app
+        version: v1
+    spec:
+      containers:
+        - name: wordpress-r-redirector
+          image: morbz/docker-web-redirect
+          ports:
+            - containerPort: 80
+          env:
+          - name: VIRTUAL_HOST
+            value: "paradoxian.popush.cloud"
+          - name: REDIRECT_TARGET
+            value: "paradoxian-japan-mod.com"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wordpress
+  name: wordpress-r-sv
+  labels:
+    app: wordpress-r-app
+    service: wordpress-r-sv
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    app: wordpress-r-app
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  namespace: wordpress
+  name: wordpress-r-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "paradoxian-japan-mod.com"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  namespace: wordpress
+  name: wordpress-r-vs
+spec:
+  hosts:
+  - "paradoxian-japan-mod.com"
+  gateways:
+  - wordpress-r-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: wordpress-r-sv
+        port:
+          number: 80
