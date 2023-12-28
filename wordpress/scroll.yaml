@@ -59,7 +59,7 @@ spec:
     - "paradoxian.popush.cloud"
     tls:
       mode: SIMPLE
-      credentialName: paradoxian-popush-cloud-tls
+      credentialName: wordpress-popush-cloud-tls
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
