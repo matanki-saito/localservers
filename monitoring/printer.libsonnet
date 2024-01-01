@@ -80,7 +80,7 @@ function(env)
         plugins:: ['marcusolsson-treemap-panel'],
         config+: {
           sections: {
-            date_formats: { default_timezone : 'JST' },
+            date_formats: { default_timezone : 'Asia/Tokyo' },
             server: {
               domain: 'grafana.popush.cloud'
             },
@@ -91,7 +91,8 @@ function(env)
               user: env.grafana.database.user,
               password: env.grafana.database.password,
               max_idle_conn: 2,
-              max_open_conn: 20
+              max_open_conn: 20,
+              wal: true
             }
           },
         },
