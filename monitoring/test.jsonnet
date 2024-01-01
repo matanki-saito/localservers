@@ -6,6 +6,12 @@ local env = {
         },
         alert: {
             discordwebhook: 'xxxxxxxx'
+        },
+        database: {
+            host: 'mysql',
+            db: 'dbname',
+            user: 'name',
+            password: 'pass',
         }
     },
 };
