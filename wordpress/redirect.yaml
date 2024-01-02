@@ -55,11 +55,14 @@ spec:
     istio: ingressgateway
   servers:
   - port:
-      number: 80
-      name: http
-      protocol: HTTP
+      number: 443
+      name: https
+      protocol: HTTPS
     hosts:
     - "paradoxian-japan-mod.com"
+    tls:
+      mode: SIMPLE
+      credentialName: wordpress-r-popush-cloud-tls
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -80,3 +83,38 @@ spec:
         host: wordpress-r-sv
         port:
           number: 80
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: wordpress-r-letsencrypt-issuer
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: matanki.saito@gmail.com
+    privateKeySecretRef:
+      name: wordpress-r-letsencrypt-issuer-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: ap-northeast-1
+          accessKeyID: AKIAXMVOGSBVQQMRQ3TJ
+          secretAccessKeySecretRef:
+            name: route53-credentials-secret
+            key: secret-access-key
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wordpress-r-popush-cloud-cert
+  namespace: istio-system
+spec:
+  secretName: wordpress-r-popush-cloud-tls
+  duration: 2160h0m0s
+  renewBefore: 360h0m0s
+  dnsNames:
+  - 'paradoxian-japan-mod.com'
+  issuerRef:
+    name: wordpress-r-letsencrypt-issuer
+    kind: ClusterIssuer
