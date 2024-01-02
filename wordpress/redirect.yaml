@@ -25,9 +25,9 @@ spec:
             - containerPort: 80
           env:
           - name: VIRTUAL_HOST
-            value: "paradoxian.popush.cloud"
-          - name: REDIRECT_TARGET
             value: "paradoxian-japan-mod.com"
+          - name: REDIRECT_TARGET
+            value: "paradoxian.popush.cloud"
 ---
 apiVersion: v1
 kind: Service
