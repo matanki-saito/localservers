@@ -74,7 +74,7 @@ function(env)
       },
       alertmanager+: {
         config: std.strReplace((importstr 'alertmanager/alertmanager-config.yaml'),
-          "env.alertmanager.webhook","'" + env.alertmanager.webhook + "'"),
+          "env.alertmanager.webhook",env.alertmanager.webhook),
       },
       grafana+:: {
         rawDashboards+:: {
