@@ -8,8 +8,6 @@ route:
   group_interval: 5m
   repeat_interval: 1h
   receiver: 'slack'
-  matchers:
-  - alertname="Watchdog"
 receivers:
 - name: 'null'
 - name: slack
