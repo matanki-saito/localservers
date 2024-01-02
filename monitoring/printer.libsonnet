@@ -85,15 +85,7 @@ function(env)
               domain: 'grafana.popush.cloud'
             },
             database: {
-              type: 'mysql',
-              host: env.grafana.database.host,
-              name: env.grafana.database.db,
-              user: env.grafana.database.user,
-              password: env.grafana.database.password,
-              max_idle_conn: 2,
-              max_open_conn: 20,
               wal: true,
-              ssl_mode: false,
             }
           },
         },
