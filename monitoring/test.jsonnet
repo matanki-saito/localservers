@@ -6,14 +6,11 @@ local env = {
         },
         alert: {
             discordwebhook: 'xxxxxxxx'
-        },
-        database: {
-            host: 'mysql',
-            db: 'dbname',
-            user: 'name',
-            password: 'pass',
         }
     },
+    alertmanager: {
+        webhook: 'xxxx'
+    }
 };
 
 local printer = (import 'printer.libsonnet');

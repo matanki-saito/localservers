@@ -72,6 +72,10 @@ function(env)
       common+: {
         namespace: 'monitoring',
       },
+      alertmanager+: {
+        config: std.strReplace((importstr 'alertmanager/alertmanager-config.yaml'),
+          "env.alertmanager.webhook",env.alertmanager.webhook),
+      },
       grafana+:: {
         rawDashboards+:: {
           'node-exporter.json': (importstr 'grafana-dashboard/node-exporter_1860_rev33.json'),
