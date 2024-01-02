@@ -1,6 +1,7 @@
 function(env)
   local kp = 
-    (import 'kube-prometheus/main.libsonnet') + {
+    (import 'kube-prometheus/main.libsonnet') +
+    (import "prometheus-pushgateway/pushgateway.libsonnet") + {
     grafana+: {
       local gmeta = super._metadata,
       networkPolicy+: {
@@ -244,4 +245,5 @@ function(env)
   { ['prometheus-adapter-' + name]: kp.prometheusAdapter[name] for name in std.objectFields(kp.prometheusAdapter) } +
   { ['micrometer-application-' + name]: kp.micrometerApplication[name] for name in std.objectFields(kp.micrometerApplication) } +
   { ['process-exporter-' + name]: kp.processExporter[name] for name in std.objectFields(kp.processExporter) } +
-  { ['apache-exporter-' + name]: kp.apacheExporter[name] for name in std.objectFields(kp.apacheExporter) }
+  { ['apache-exporter-' + name]: kp.apacheExporter[name] for name in std.objectFields(kp.apacheExporter) } +
+  { ['prometheus-pushgateway-' + name]: kp.pushgateway[name], for name in std.objectFields(kp.pushgateway) }
