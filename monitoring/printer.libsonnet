@@ -2,6 +2,9 @@ function(env)
   local kp = 
     (import 'kube-prometheus/main.libsonnet') +
     (import "prometheus-pushgateway/pushgateway.libsonnet") + {
+    _config+:: {
+      namespace: 'monitoring',
+    },
     grafana+: {
       local gmeta = super._metadata,
       networkPolicy+: {
