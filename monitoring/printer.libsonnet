@@ -92,7 +92,8 @@ function(env)
               password: env.grafana.database.password,
               max_idle_conn: 2,
               max_open_conn: 20,
-              wal: true
+              wal: true,
+              ssl_mode: false,
             }
           },
         },
