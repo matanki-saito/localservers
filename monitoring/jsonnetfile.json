@@ -9,6 +9,15 @@
         }
       },
       "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/latchmihay/kube-prometheus-pushgateway",
+          "subdir": "prometheus-pushgateway"
+        }
+      },
+      "version": "master"
     }
   ],
   "legacyImports": true
