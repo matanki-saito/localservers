@@ -10,6 +10,5 @@ route:
 receivers:
 - name: 'null'
 - name: discord
-  discord_config:
-  - send_resolved: true
-    webhook_url: 'env.alertmanager.webhook'
+  discord_configs:
+  - webhook_url: 'env.alertmanager.webhook'
