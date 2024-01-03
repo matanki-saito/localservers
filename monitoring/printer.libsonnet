@@ -246,7 +246,7 @@ function(env)
               rules: [
                 {
                   alert: 'TestAlert',
-                  expr: 'IF hoge_metrics == 0',
+                  expr: 'hoge_metrics == 0',
                   'for': '1s',
                   labels: {
                     severity: 'warning',

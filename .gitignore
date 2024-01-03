@@ -1,2 +1,5 @@
 monitoring/vendor
 monitoring/vendor/
+monitoring/manifests/
+monitoring/jsonnetfile.lock.json
+monitoring/.idea/
