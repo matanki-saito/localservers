@@ -71,7 +71,6 @@ function(env)
         }
       }
     },
-
     values+:: {
       common+: {
         namespace: 'monitoring',
@@ -228,6 +227,36 @@ function(env)
         },
       },
     },
+    testApplication: {
+      pushgatewayTestRule: {
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'PrometheusRule',
+        metadata: {
+          name: 'my-prometheus-rule',
+          namespace: $.values.common.namespace,
+        },
+        spec: {
+          groups: [
+            {
+              name: 'test-group',
+              rules: [
+                {
+                  alert: 'TestAlert',
+                  expr: 'IF hoge_metrics == 0',
+                  'for': '1s',
+                  labels: {
+                    severity: 'warning',
+                  },
+                  annotations: {
+                    description: 'This is an test alert.',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
   };
 
   { 'setup/0namespace-namespace': kp.kubePrometheus.namespace } +
@@ -249,4 +278,5 @@ function(env)
   { ['micrometer-application-' + name]: kp.micrometerApplication[name] for name in std.objectFields(kp.micrometerApplication) } +
   { ['process-exporter-' + name]: kp.processExporter[name] for name in std.objectFields(kp.processExporter) } +
   { ['apache-exporter-' + name]: kp.apacheExporter[name] for name in std.objectFields(kp.apacheExporter) } +
-  { ['prometheus-pushgateway-' + name]: kp.pushgateway[name], for name in std.objectFields(kp.pushgateway) }
+  { ['prometheus-pushgateway-' + name]: kp.pushgateway[name], for name in std.objectFields(kp.pushgateway) } +
+  { ['test-application-' + name]: kp.testApplication[name] for name in std.objectFields(kp.testApplication) }
