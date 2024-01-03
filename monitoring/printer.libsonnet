@@ -234,6 +234,10 @@ function(env)
         metadata: {
           name: 'my-prometheus-rule',
           namespace: $.values.common.namespace,
+          labels: {
+            prometheus: 'k8s',
+            role: 'alert-rules',
+          }
         },
         spec: {
           groups: [
