@@ -28,7 +28,7 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - "*"
+    - "triela.popush.cloud"
     tls:
       mode: SIMPLE
       credentialName: triela-popush-cloud-tls
@@ -40,7 +40,7 @@ metadata:
   name: triela-vs
 spec:
   hosts:
-  - "*"
+  - "triela.popush.cloud"
   gateways:
   - colle-clapier
   http:
