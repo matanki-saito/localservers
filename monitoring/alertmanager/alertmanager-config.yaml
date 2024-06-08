@@ -12,4 +12,4 @@ receivers:
 - name: discord
   discord_configs:
   - webhook_url: 'env.alertmanager.webhook'
-  - message: 'alert!'
+    message: 'alert!'
