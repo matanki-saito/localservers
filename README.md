@@ -237,15 +237,18 @@ link: https://istio.io/latest/docs/tasks/security/authorization/authz-custom/
 Open the "istio" ConfigMap in LENS and add the following a section and save.
 
 ```
-extensionProviders:
-- name: "ext-authz-grpc"
-  envoyExtAuthzGrpc:
-    service: "external-authz-grpc.local"
-    port: "9000"
-    includeRequestBodyInCheck:
-      maxRequestBytes: 10000000 #10MB
-      packAsBytes: true
-      allowPartialMessage: true
+data:
+  mesh: |-
+    ...
+    extensionProviders:
+    - name: "ext-authz-grpc"
+      envoyExtAuthzGrpc:
+        service: "external-authz-grpc.local"
+        port: "9000"
+        includeRequestBodyInCheck:
+          maxRequestBytes: 10000000 #10MB
+          packAsBytes: true
+          allowPartialMessage: true
 ```
 
 ### Create the ServiceEntry
