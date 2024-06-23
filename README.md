@@ -108,6 +108,7 @@ Create namespaces.
 - ente-pubblico-per-il-benessere-sociale
 - cert-manager
 - wordpress
+- gangway
 
 ```sh
 $ sudo microk8s.kubectl create namespace argocd
