@@ -181,12 +181,12 @@ $ helm repo add jetstack https://charts.jetstack.io
 ...
 $ helm repo update
 ...
-$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.15.0 --create-namespace --set installCRDs=true
+$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.15.0 --create-namespace --set crds.enabled=true
 ```
 
 ## Apply manifests to cluster using argocd
 
-Log in to Argocd. The admin username is `admin`. The admin Password exists in `secrets/argocd-initial-admin-secret`.
+Log in to Argocd. The admin username is `admin`. The admin Password exists in `secrets/argocd-initial-admin-secret`. The ID is `admin`.
 
 Create a Project and create the following Applications in it.
 
