@@ -107,6 +107,7 @@ Create namespaces.
 - wikis
 - ente-pubblico-per-il-benessere-sociale
 - cert-manager
+- wordpress
 
 ```sh
 $ sudo microk8s.kubectl create namespace argocd
@@ -120,6 +121,7 @@ Attach the `istio-injection=enabled` label to following namespaces.
 - monitoring
 - wikis
 - ente-pubblico-per-il-benessere-sociale
+- wordpress
 
 ```sh
 $ sudo microk8s.kubectl label namespace argocd istio-injection=enabled
@@ -221,6 +223,10 @@ rate limit for eu4 wiki
 ### argocd
 
 argocd gateway, argocd notifications
+
+### wordpress
+
+paradoxian documents
 
 ## Setup gangway
 link: https://istio.io/latest/docs/tasks/security/authorization/authz-custom/
