@@ -150,6 +150,8 @@ spec:
       containers:
       - name: wikidb-backup-docker
         image: databack/mysql-backup
+        args:
+          - dump
         envFrom:
           - secretRef:
               name: wikidb-backup-env-secret
