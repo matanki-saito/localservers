@@ -4,7 +4,7 @@ metadata:
   namespace: wikis
   name: ck2wiki-backup-batch
 spec:
-  schedule: "10 */36 * * *"
+  schedule: "5 0 * * 0"
   concurrencyPolicy: "Forbid"
   startingDeadlineSeconds: 600
   jobTemplate:
@@ -38,7 +38,7 @@ metadata:
   namespace: wikis
   name: eu4wiki-backup-batch
 spec:
-  schedule: "5 */12 * * *"
+  schedule: "5 12 * * 5"
   concurrencyPolicy: "Forbid"
   startingDeadlineSeconds: 600
   jobTemplate:
@@ -72,7 +72,7 @@ metadata:
   namespace: wikis
   name: ck3wiki-backup-batch
 spec:
-  schedule: "15 */36 * * *"
+  schedule: "25 0 * * 0"
   concurrencyPolicy: "Forbid"
   startingDeadlineSeconds: 600
   jobTemplate:
