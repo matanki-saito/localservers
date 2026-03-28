@@ -6,7 +6,7 @@
 
 For instance
 
-- Server machine 192.168.1.20
+- Server machine 192.168.1.201
   - Ubuntu Server: 24.04
   - memory 32GB
   - SSD /dev/sda3 /
@@ -42,15 +42,16 @@ $ sudo apt install net-tools
 ...
 $ ip addr
 2: eno1: ...
-$ sudo ifconfig eno1:1 192.168.1.100 netmask 255.255.255.0
+$ sudo ifconfig eno1:1 192.168.1.201 netmask 255.255.255.0
 ```
 
 Refer to [here](http://pentan.info/server/linux/nic_sub_ip.html)
 
 ## Install microk8s
 ```sh
-$ sudo snap install microk8s --classic
-microk8s (1.29/stable) v1.29.4 from Canonical✓ installed
+gnagaoka@sv201:~$ sudo snap install microk8s --classic --channel=1.35/stable
+[sudo] password for gnagaoka:
+microk8s (1.35/stable) v1.35.0 from Canonical✓ installed
 ```
 
 ## Add args to kubelet
@@ -75,7 +76,7 @@ $ sudo microk8s enable dns
 ...
 DNS is enabled
 $ sudo microk8s enable metallb
-Enter each IP: 192.168.1.100-192.168.1.110
+Enter each IP: 192.168.1.201-192.168.1.205
 ...
 MetalLB is enabled
 ```
@@ -84,7 +85,7 @@ MetalLB is enabled
 
 ```sh
 $ mkdir ~/.kube
-$ sudo microk8s.kubetl config view --raw > ~/.kube/config
+$ sudo microk8s.kubectl config view --raw > ~/.kube/config
 ...
 ```
 
