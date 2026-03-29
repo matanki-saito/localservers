@@ -146,13 +146,36 @@ Installation will **fail** if both dns and metallb add-on are not enabled.
 
 ```sh
 $ curl -L https://istio.io/downloadIstio | sh -
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   102    0   102    0     0    443      0 --:--:-- --:--:-- --:--:--   443
+100  5124  100  5124    0     0  10478      0 --:--:-- --:--:-- --:--:-- 10478
+
+Downloading istio-1.29.1 from https://github.com/istio/istio/releases/download/1.29.1/istio-1.29.1-linux-amd64.tar.gz ...
+
+Istio 1.29.1 download complete!
 ...
-$ cd istio-1.22.1/bin/
+$ cd istio-1.29.1/bin/
 $ ./istioctl install --set profile=default
-This will install the Istio 1.22.1 default profile with ["Istio core" "Istiod" "Ingress gateways"] components into the cluster. Proceed? (y/N) y
-✔ Istio core installed
-✔ Istiod installed
-✔ Ingress gateways installed
+        |\
+        | \
+        |  \
+        |   \
+      /||    \
+     / ||     \
+    /  ||      \
+   /   ||       \
+  /    ||        \
+ /     ||         \
+/______||__________\
+____________________
+  \__       _____/
+     \_____/
+
+This will install the Istio 1.29.1 profile "default" into the cluster. Proceed? (y/N) y
+✔ Istio core installed ⛵️
+✔ Istiod installed 🧠
+✔ Ingress gateways installed 🛬
 ✔ Installation complete
 ```
 
@@ -168,13 +191,14 @@ Ref: https://istio.io/latest/docs/ops/configuration/traffic-management/network-t
 
 1. Open `istio-ingressgateway` service yaml by LENS.
 2. Change externalTrafficPolicy type from `Cruster` to `Local`.
+3. Restert istio-ingressgateway Deployments by lens
 
 ## Install istio tools
 
 ```sh
-$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.22/samples/addons/kiali.yaml
+$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.29.1/samples/addons/kiali.yaml
 ...
-$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.22/samples/addons/prometheus.yaml
+$ sudo microk8s.kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.29.1/samples/addons/prometheus.yaml
 ...
 ```
 
@@ -185,7 +209,7 @@ $ helm repo add jetstack https://charts.jetstack.io
 ...
 $ helm repo update
 ...
-$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.15.0 --create-namespace --set crds.enabled=true
+$ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.15.5 --create-namespace --set crds.enabled=true
 ```
 
 ## Apply manifests to cluster using argocd
