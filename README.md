@@ -1,6 +1,58 @@
 # Localservers
 
-![netowork](img/network.jpg)
+```mermaid
+graph TD
+    %% 外部サービス
+    subgraph External_Network ["外部"]
+        Route53["Route53<br/>*.popush.cloud"]
+        Internet((Internet))
+    end
+
+    %% ルーター
+    Router["ruter(F660T)<br/>+<br/>DNS APP<br/>(192.168.1.1)"]
+
+    %% サーバー (Ubuntu 24) 
+    subgraph Ubuntu_Server_Node ["Server (Ubuntu 22)"]
+        subgraph microk8s_cluster ["microk8s"]
+            MetaLLB[MetaLLB]
+            CoreDNS[CoreDNS]
+            Istio[istio]
+            AuthChk[auth chk]
+            Pods[pods]
+            NFSDrive[nfs drive]
+        end
+    end
+
+    %% コンソール
+    subgraph Console_Node ["Console"]
+        SSH[SSH]
+        LENS[LENS]
+    end
+
+    %% 接続関係
+    Route53 --> Internet
+    Internet -- "90.149.116.17" --> Router
+    
+    %% ルーターからの接続
+    Router -- "192.168.1.201" --> MetaLLB
+    Router --- CoreDNS
+    Router -- "DHCP" --> Console_Node
+
+    %% クラスター内部のフロー
+    MetaLLB --> Istio
+    Istio --> AuthChk
+    AuthChk --> Pods
+    NFSDrive -.-> Pods
+    
+    %% コンソールからのアクセス
+    SSH -- "192.168.1.201" --> Ubuntu_Server_Node
+    LENS -- "192.168.1.201" --> microk8s_cluster
+
+    %% スタイル設定
+    style Ubuntu_Server_Node fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style microk8s_cluster fill:#fff,stroke:#333,stroke-dasharray: 5 5
+    style Console_Node fill:#f9f9f9,stroke:#333,stroke-width:2px
+```
 
 ## Set up machine
 
